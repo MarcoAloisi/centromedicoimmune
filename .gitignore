@@ -1,0 +1,17 @@
+# Virtual environment
+myenv/
+
+# Django specific files
+*.log
+*.pot
+*.pyc
+__pycache__/
+
+# Database files
+*.sqlite3
+
+# VS Code settings
+.vscode/
+
+# PyCharm settings
+.idea/
