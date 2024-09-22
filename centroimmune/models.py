@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.core.validators import RegexValidator
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
@@ -18,6 +18,22 @@ class User(AbstractUser):
         ('paciente', 'Paciente'),
     )
     rol = models.CharField(max_length=10, choices=USER_ROLES)
+
+    # Añadir related_name personalizado para evitar conflictos
+    groups = models.ManyToManyField(
+        Group,
+        related_name='custom_user_groups',
+        blank=True,
+        help_text=_('The groups this user belongs to. A user will get all permissions granted to each of their groups.'),
+        verbose_name=_('groups'),
+    )
+    user_permissions = models.ManyToManyField(
+        Permission,
+        related_name='custom_user_permissions',
+        blank=True,
+        help_text=_('Specific permissions for this user.'),
+        verbose_name=_('user permissions'),
+    )
 
     def __str__(self):
         return f"{self.username} ({self.get_rol_display()})"
@@ -153,3 +169,5 @@ class Factura(models.Model):
         verbose_name = "Factura"
         verbose_name_plural = "Facturas"
         ordering = ['-fecha_emision']
+
+# TODO: Agregar más modelos según sea necesario

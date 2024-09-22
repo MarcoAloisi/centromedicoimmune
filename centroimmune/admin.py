@@ -52,3 +52,4 @@ class FacturaAdmin(admin.ModelAdmin):
     list_filter = ('pagado', 'fecha_emision')
     readonly_fields = ('numero_factura',)
 
+# TODO
