@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+from decouple import config
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,6 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-d81@*gqk04=zj^*z^91^i_#u+oxjli8_hxo=&&08$^)lwj1g1b'
+
+FERNET_KEY = config('FERNET_KEY')
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -37,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_cryptography',
     'centroimmune',
 ]
 
@@ -69,6 +75,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'centromedico.wsgi.application'
+
+AUTH_USER_MODEL = 'centroimmune.User'
 
 
 # Database
@@ -122,3 +130,6 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CRYPTOGRAPHY_KEY = config('CRYPTOGRAPHY_KEY')
+

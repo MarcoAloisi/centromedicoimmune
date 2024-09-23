@@ -1,0 +1,4 @@
+django
+python-decouple
+django_cryptography
+django-fernet-fields
