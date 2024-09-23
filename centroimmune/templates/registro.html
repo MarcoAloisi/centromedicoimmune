@@ -32,70 +32,127 @@
 </head>
 
 <body>
-    <form class="row g-2">
+    <div class="top-page row g-3">
+        <img src="../static/images/logo_inmune.png" width="20%"/>
+        <h1 style="margin-left: 10%;">Registro de nuevos usuarios</h1>
+    </div>
+
+    <form class="row g-2" method="post">
+        <!-- Campo de Nombre -->
         <div class="col-md-4" style="margin-bottom: 2%;">
-            <label for="inputNombre4" class="form-label">Nombre</label>
-            <input type="nombre" class="form-control" id="inputNombre4">
+            <label for="inputNombre4" class="form-label">Nombre *</label>
+            <input type="text" class="form-control" id="inputNombre4" name="nombre" required>
         </div>
+        
+        <!-- Campo de Apellidos -->
         <div class="col-md-4" style="margin-bottom: 2%;">
-            <label for="inputApellidos4" class="form-label">Apellidos</label>
-            <input type="apellidos" class="form-control" id="inputApellidos4">
+            <label for="inputApellidos4" class="form-label">Apellidos *</label>
+            <input type="text" class="form-control" id="inputApellidos4" name="apellidos" required>
         </div>
+        
+        <!-- Campo de DNI -->
         <div class="col-md-4" style="margin-bottom: 2%;">
-            <div>
-                <div class="datepicker-container">
-                  <label for="datepicker">Selecciona una fecha:</label>
-                  <input type="text" class="form-control" id="datepicker" placeholder="Click aquí">
-                </div>
+            <label for="inputDNI" class="form-label">DNI / NIE *</label>
+            <input type="text" class="form-control" id="inputDNI" name="dni" required>
+        </div>
+    
+        <!-- Selector de Fecha de Nacimiento -->
+        <div class="col-md-4" style="margin-bottom: 2%;">
+            <div class="datepicker-container">
+                <label for="datepicker">Fecha de Nacimiento *</label>
+                <input type="text" class="form-control" id="datepicker" name="fecha_nacimiento" placeholder="Selecciona aquí" required>
             </div>
         </div>
-        <div class="col-12" style="margin-bottom: 2%;">
-          <label for="inputDireccion" class="form-label">Dirección</label>
-          <input type="text" class="form-control" id="inputDireccion" placeholder="Paseo de la Castellana, 3">
-        </div>
-        <div class="col-12" style="margin-bottom: 2%;">
-          <label for="inputDireccion2" class="form-label">Dirección 2</label>
-          <input type="text" class="form-control" id="inputDireccion2" placeholder="Apartamento, escalera, portal, puerta">
-        </div>
+    
+        <!-- Selector de Género -->
         <div class="col-md-4" style="margin-bottom: 2%;">
             <div>
                 <label for="inputState" class="form-label">Lugar de Nacimiento</label>
             </div>
             <div>
-                <select id="inputState" class="form-select">
-                    <option selected>Choose...</option>
-                    <option>...</option>
-                  </select>
+                <select id="inputGenero" class="form-select" name="genero" required>
+                    <option value="M">Masculino</option>
+                    <option value="F">Femenino</option>
+                    <option value="O">Otro</option>
+                </select>
             </div>
         </div>
-        <div class="col-md-6" style="margin-bottom: 2%;">
-          <label for="inputCiudad" class="form-label">Ciudad</label>
-          <input type="text" class="form-control" id="inputCiudad">
+
+        <!-- Campo de Nacionalidad -->
+        <div class="col-md-4" style="margin-bottom: 2%;">
+            <label for="inputNacionalidad" class="form-label">Nacionalidad *</label>
+            <input type="text" class="form-control" id="inputNacionalidad" name="nacionalidad" required>
         </div>
+        
+        <!-- Campo de Dirección -->
+        <div class="col-12" style="margin-bottom: 2%;">
+            <label for="inputDireccion" class="form-label">Dirección *</label>
+            <input type="text" class="form-control" id="inputDireccion" name="direccion" placeholder="Paseo de la Castellana, 3" required>
+        </div>
+        
+        <!-- Campo de Dirección 2 -->
+        <div class="col-12" style="margin-bottom: 2%;">
+            <label for="inputDireccion2" class="form-label">Dirección 2</label>
+            <input type="text" class="form-control" id="inputDireccion2" name="direccion2" placeholder="Apartamento, escalera, portal, puerta (Opcional)">
+        </div>
+    
+        <!-- Campo de Ciudad -->
+        <div class="col-md-6" style="margin-bottom: 2%;">
+            <label for="inputCiudad" class="form-label">Ciudad *</label>
+            <input type="text" class="form-control" id="inputCiudad" name="ciudad" required>
+        </div>
+    
+        <!-- Campo de Código Postal -->
         <div class="col-md-2" style="margin-bottom: 2%;">
-          <label for="inputZip" class="form-label">Código Postal</label>
-          <input type="text" class="form-control" id="inputZip">
+            <label for="inputZip" class="form-label">Código Postal *</label>
+            <input type="text" class="form-control" id="inputZip" name="codigo_postal" required>
         </div>
+    
+        <!-- Campo de Teléfono -->
+        <div class="col-md-2" style="margin-bottom: 2%;">
+            <label for="inputTelefono" class="form-label">Teléfono *</label>
+            <input type="text" class="form-control" id="inputTelefono" name="telefono" required>
+        </div>
+    
+        <!-- Campo de Email -->
         <div class="col-md-6" style="margin-bottom: 2%;">
-            <label for="inputEmail4" class="form-label">Email</label>
-            <input type="email" class="form-control" id="inputEmail4">
+            <label for="inputEmail4" class="form-label">Email *</label>
+            <input type="email" class="form-control" id="inputEmail4" name="correo_electronico" required>
         </div>
+    
+        <!-- Campo de Contraseña -->
         <div class="col-md-6" style="margin-bottom: 2%;">
-            <label for="inputPassword4" class="form-label">Contraseña</label>
-            <input type="password" class="form-control" id="inputPassword4">
-        </div> 
-        <div class="col-12" style="margin-bottom: 2%;">
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="gridCheck">
-            <label class="form-check-label" for="gridCheck">
-              Check me out
-            </label>
-          </div>
+            <label for="inputPassword4" class="form-label">Contraseña *</label>
+            <input type="password" class="form-control" id="inputPassword4" name="contrasena" required>
         </div>
+        
+        <!-- Campo de Historial Médico -->
         <div class="col-12" style="margin-bottom: 2%;">
-          <button type="submit" class="btn btn-primary">Sign in</button>
+            <label for="inputHistorial" class="form-label">Historial Médico (Opcional)</label>
+            <textarea class="form-control" id="inputHistorial" name="historial_medico" rows="3"></textarea>
         </div>
-    </form>
+    
+        <!-- Campo de Información de Seguro -->
+        <div class="col-12" style="margin-bottom: 2%;">
+            <label for="inputSeguro" class="form-label">Información del Seguro (Opcional)</label>
+            <textarea class="form-control" id="inputSeguro" name="informacion_seguro" rows="2"></textarea>
+        </div>
+    
+        <!-- CheckBox -->
+        <div class="col-12" style="margin-bottom: 2%;">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="gridCheck" required>
+                <label class="form-check-label" for="gridCheck">
+                    Acepto los términos y condiciones
+                </label>
+            </div>
+        </div>
+        
+        <!-- Botón de Enviar -->
+        <div class="col-12" style="margin-bottom: 10%;">
+            <button type="submit" class="btn btn-primary">Registrar</button>
+        </div>
+    </form>    
 
     <script src="../static/js/jquery.min.js"></script>
     <script src="../static/js/popper.min.js"></script>
