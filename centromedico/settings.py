@@ -22,8 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-d81@*gqk04=zj^*z^91^i_#u+oxjli8_hxo=&&08$^)lwj1g1b'
-
+SECRET_KEY = config('SECRET_KEY')
 FERNET_KEY = config('FERNET_KEY')
 
 
@@ -54,6 +53,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
 ]
 
 ROOT_URLCONF = 'centromedico.urls'
@@ -84,11 +85,17 @@ AUTH_USER_MODEL = 'centroimmune.User'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config('DATABASE_NAME'),
+        'USER': config('DATABASE_USER'),
+        'PASSWORD': config('DATABASE_PASSWORD'),
+        'HOST': config('DATABASE_HOST', default='localhost'),
+        'PORT': config('DATABASE_PORT', default='5432'),
+        'OPTIONS': {
+            'sslmode': 'prefer',
+        },
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators

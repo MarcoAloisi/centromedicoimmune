@@ -36,8 +36,15 @@
         <img src="../static/images/logo_inmune.png" width="20%"/>
         <h1 style="margin-left: 10%;">Registro de nuevos usuarios</h1>
     </div>
+    
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
 
     <form class="row g-2" method="post">
+        {% csrf_token %}
         <!-- Campo de Nombre -->
         <div class="col-md-4" style="margin-bottom: 2%;">
             <label for="inputNombre4" class="form-label">Nombre *</label>
