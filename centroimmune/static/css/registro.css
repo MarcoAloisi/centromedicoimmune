@@ -5,3 +5,8 @@
     margin-right: 10%;
     margin-left: 10%;
 }
+
+.top-page {
+    align-items: center;
+    justify-content: center;
+}
