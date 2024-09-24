@@ -5,3 +5,4 @@ dj_database_url
 django_cryptography
 gunicorn
 psycopg2
+whitenoise
