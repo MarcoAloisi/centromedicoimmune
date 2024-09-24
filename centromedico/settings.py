@@ -30,7 +30,7 @@ FIELD_ENCRYPTION_KEY = config('ENCRYPTED_MODEL_FIELDS_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['https://centromedicoimmune.onrender.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['centromedicoimmune.onrender.com', 'localhost', '127.0.0.1']
 
 # Application definition
 
