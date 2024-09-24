@@ -177,7 +177,7 @@ class Migration(migrations.Migration):
             name='ConsentimientoInformado',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('texto_consentimiento', encrypted_model_fields.fields.fields.EncryptedTextField()),
+                ('texto_consentimiento', encrypted_model_fields.fields.EncryptedTextField()),
                 ('fecha_firma', models.DateTimeField(auto_now_add=True)),
                 ('firmado', models.BooleanField(default=False)),
                 ('paciente', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='consentimientos', to='centroimmune.paciente')),
