@@ -28,10 +28,9 @@ FERNET_KEY = config('FERNET_KEY')
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['https://centromedicoimmune.onrender.com', 'localhost', '127.0.0.1']
 
 # Application definition
 
