@@ -4,3 +4,4 @@ django_cryptography
 django-fernet-fields
 dj_database_url
 gunicorn
+psycopg2
