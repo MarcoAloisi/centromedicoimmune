@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.core.validators import RegexValidator, ValidationError
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
-from django_fernet_fields.fields import EncryptedTextField
+from encrypted_model_fields.fields import EncryptedCharField, EncryptedTextField
 from django.utils import timezone
 import re
 
@@ -79,7 +79,7 @@ class Paciente(models.Model):
     telefono = models.CharField(validators=[phone_regex], max_length=17)
     correo_electronico = models.EmailField(unique=True)
     historial_medico = EncryptedTextField(blank=True, null=True)
-    informacion_seguro = EncryptedTextField(max_length=255, blank=True, null=True)
+    informacion_seguro = EncryptedCharField(max_length=255, blank=True, null=True)
     fecha_registro = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
