@@ -1,7 +1,6 @@
 django
 python-decouple
-django_cryptography
-django-fernet-fields
+django-encrypted-model-fields
 dj_database_url
 gunicorn
 psycopg2
