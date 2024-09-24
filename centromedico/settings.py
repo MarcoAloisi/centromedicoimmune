@@ -15,7 +15,7 @@ from decouple import config
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent 
 
 
 # Quick-start development settings - unsuitable for production
@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_cryptography',
+    'django_extensions',
     'centroimmune',
 ]
 
@@ -140,3 +141,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CRYPTOGRAPHY_KEY = config('CRYPTOGRAPHY_KEY')
 
+# CONFIGURACION DE SEGURIDAD
+
+# Usar HTTPS (TLS/SSL)
+# https://docs.djangoproject.com/en/stable/ref/middleware/#module-django.middleware.security
+SECURE_SSL_REDIRECT = True
+SECURE_HSTS_SECONDS = 60
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True

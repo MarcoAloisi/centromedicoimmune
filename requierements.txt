@@ -2,3 +2,7 @@ django
 python-decouple
 django_cryptography
 django-fernet-fields
+django_extensions
+Werkzeug
+pyOpenSSL
+python manage.py runserver_plus --cert-file dev.cert --key-file dev.key
