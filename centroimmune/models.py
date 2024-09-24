@@ -3,7 +3,7 @@ from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.core.validators import RegexValidator, ValidationError
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
-from fernet_fields import EncryptedTextField
+from django_fernet_fields import EncryptedTextField
 from django.utils import timezone
 import re
 
