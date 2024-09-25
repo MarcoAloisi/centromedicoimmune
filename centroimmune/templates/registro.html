@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -13,35 +14,29 @@
    <meta name="description" content="">
    <meta name="author" content="">
    
-   <link rel="stylesheet" href="../static/css/bootstrap.min.css">
-
-   <link rel="stylesheet" href="../static/css/registro.css">
-   
-   <link rel="stylesheet" href="../static/css/style.css">
-   
-   <link rel="stylesheet" href="../static/css/responsive.css">
-   
-   <link rel="stylesheet" href="../static/css/jquery.mCustomScrollbar.min.css">
-   
+   <!-- CSS Files -->
+   <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+   <link rel="stylesheet" href="{% static 'css/registro.css' %}">
+   <link rel="stylesheet" href="{% static 'css/style.css' %}">
+   <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
+   <link rel="stylesheet" href="{% static 'css/jquery.mCustomScrollbar.min.css' %}">
+   <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}">
+   <link rel="stylesheet" href="{% static 'css/owl.theme.default.min.css' %}">
    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
-
-   <link rel="stylesheet" href="../static/css/owl.carousel.min.css">
-   <link rel="stylesheet" href="../static/css/owl.theme.default.min.css">
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css" media="screen">
-
 </head>
 
 <body>
-    <div class="top-page row g-3">
-        <img src="../static/images/logo_inmune.png" width="20%"/>
-        <h1 style="margin-left: 10%;">Registro de nuevos usuarios</h1>
-    </div>
-    
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-        {% endfor %}
-    {% endif %}
+   <div class="top-page row g-3">
+       <img src="{% static 'images/logo_inmune.png' %}" width="20%"/>
+       <h1 style="margin-left: 10%;">Registro de nuevos usuarios</h1>
+   </div>
+   
+   {% if messages %}
+       {% for message in messages %}
+           <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+       {% endfor %}
+   {% endif %}
 
     <form class="row g-2" method="post">
         {% csrf_token %}
@@ -191,30 +186,30 @@
         </div>
     </form>    
 
-    <script src="../static/js/jquery.min.js"></script>
-    <script src="../static/js/popper.min.js"></script>
-    <script src="../static/js/bootstrap.bundle.min.js"></script>
-    <script src="../static/js/jquery-3.0.0.min.js"></script>
-    <script src="../static/js/plugin.js"></script>
+   <!-- JavaScript Files -->
+   <script src="{% static 'js/jquery.min.js' %}"></script>
+   <script src="{% static 'js/popper.min.js' %}"></script>
+   <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+   <script src="{% static 'js/jquery-3.0.0.min.js' %}"></script>
+   <script src="{% static 'js/plugin.js' %}"></script>
+   <script src="{% static 'js/jquery.mCustomScrollbar.concat.min.js' %}"></script>
+   <script src="{% static 'js/custom.js' %}"></script>
+   <script src="{% static 'js/owl.carousel.js' %}"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/@coreui/coreui@4.0.0/dist/js/coreui.bundle.min.js"></script>
 
-    <script src="../static/js/jquery.mCustomScrollbar.concat.min.js"></script>
-    <script src="../static/js/custom.js"></script>
-
-    <script src="../static/js/owl.carousel.js"></script>
-    <script src="https:cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@coreui/coreui@4.0.0/dist/js/coreui.bundle.min.js"></script>
-
-    <script>
-        $(document).ready(function() {
-          // Inicializar el Date Picker de jQuery UI
-          $("#datepicker").datepicker({
-            dateFormat: "dd-mm-yy", // Formato de la fecha
-            changeMonth: true,      // Permitir cambiar el mes
-            changeYear: true,        // Permitir cambiar el año
-            yearRange: "1900:2024"
-          });
-        });
-    </script>
+   <!-- Initialize Datepicker -->
+   <script>
+       $(document).ready(function() {
+         // Initialize the Date Picker
+         $("#datepicker").datepicker({
+           dateFormat: "dd-mm-yy",
+           changeMonth: true,
+           changeYear: true,
+           yearRange: "1900:2024"
+         });
+       });
+   </script>
 </body>
 
 </html>
