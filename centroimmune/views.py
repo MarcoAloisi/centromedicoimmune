@@ -98,6 +98,9 @@ def registro(request):
 
     else:
         return render(request, 'registro.html')
+    
+def inicio_sesion(request):
+    return render(request, 'inicio_sesion.html')
 
 def index(request):
     return render(request, 'index.html')

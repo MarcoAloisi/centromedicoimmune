@@ -16,11 +16,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from centroimmune.views import index, registro  # Correctly reference the views module
+from centroimmune.views import index, registro, inicio_sesion  # Correctly reference the views module
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index, name='index'),  # Map the root URL to the index view
     path('registro/', registro, name='registro'),
+    path('inicio_sesion/', inicio_sesion, name='inicio_sesion'),  # Añade esta línea
 ]
