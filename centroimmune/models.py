@@ -219,7 +219,7 @@ class Cita(models.Model):
     paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE, related_name='citas')
     personal_medico = models.ForeignKey(PersonalMedico, on_delete=models.CASCADE, related_name='citas')
     fecha = models.DateTimeField()
-    tratamiento = models.ForeignKey(Tratamiento, on_delete=models.SET_NULL, null=True, related_name='citas')
+    tratamiento = models.ForeignKey(Tratamiento, on_delete=models.SET_NULL, null=True,blank=True, related_name='citas')
     estado = models.CharField(max_length=20, choices=EstadosCita.choices, default=EstadosCita.PROGRAMADA)
     motivo = models.CharField(max_length=255, blank=True, null=True)
     creado_en = models.DateTimeField(auto_now_add=True)
