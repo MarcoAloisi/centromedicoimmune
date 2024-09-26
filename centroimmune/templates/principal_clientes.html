@@ -10,6 +10,23 @@
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
+    <div>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="logo">
+               <a href="principal_clientes.html"><img src="../static/images/logo_inmune.png" style="width:10%"></a>
+            </div>
+            <div>
+                <h3>Portal del paciente</h1>
+            </div>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+               <ul class="navbar-nav mr-auto">
+                  <li class="nav-item">
+                     <a class="nav-link" href="{% url 'inicio_sesion' %}">Cerrar sesión</a>
+                  </li>
+               </ul>
+            </div>
+         </nav>
+    </div>
     <div class="container my-5">
         <!-- Tarjeta de Datos Personales -->
         <div class="card mb-4 shadow-sm">
@@ -51,7 +68,7 @@
                                 <p class="card-text"><strong>Notas: </strong>Dolor de espalda intenso</p>
                             </div>
                             <div class="card-footer">
-                                <a href="#" class="btn btn-primary btn-block">Modificar cita</a>
+                                <a href="#" class="btn btn-primary btn-block" data-toggle="modal" data-target="#modificarCitaModal">Modificar cita</a>
                             </div>
                         </div>
                     </div>
@@ -69,7 +86,7 @@
                                 <p class="card-text"><strong>Notas: </strong>Pruebas LFT, RES, THT</p>
                             </div>
                             <div class="card-footer">
-                                <a href="#" class="btn btn-success btn-block">Modificar cita</a>
+                                <a href="#" class="btn btn-success btn-block" data-toggle="modal" data-target="#modificarCitaModal">Modificar cita</a>
                             </div>
                         </div>
                     </div>
@@ -86,30 +103,82 @@
                                 <p class="card-text"><strong>Médico: </strong>Dr. Juan Pérez</p>
                                 <p class="card-text"><strong>Notas: </strong>Análisis exhaustivo en espalda zona inferior</p>
                             </div>
+
                             <div class="card-footer">
-                                <a href="#" class="btn btn-warning btn-block">Modificar cita</a>
+                                <a href="#" class="btn btn-warning btn-block" data-toggle="modal" data-target="#modificarCitaModal">Modificar cita</a>
                             </div>
                         </div>
                     </div>
                     
-                    <!-- Repetir la estructura de la cita para más citas -->
-                    <!-- <div class="col-md-4 mb-3">
-                        <div class="card shadow-sm">
-                            <div class="card-header bg-success text-white">
-                                <h6 class="card-title">Consulta Médica</h6>
-                            </div>
-                            <div class="card-body">
-                                <p class="card-text"><strong>Fecha:</strong> 12 de Octubre, 2024</p>
-                                <p class="card-text"><strong>Hora:</strong> 10:00 AM</p>
-                                <p class="card-text"><strong>Médico:</strong> Dr. Juan Pérez</p>
-                                <p class="card-text"><strong>Especialidad:</strong> Cardiología</p>
-                            </div>
-                        </div>
-                    </div> -->
                 </div>
             </div>
             <div class="card-footer text-right">
-                <a href="#" class="btn btn-primary">Solicitar Nueva Cita</a>
+                <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#nuevaCitaModal">Solicitar Nueva Cita</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Modificar Cita -->
+    <div class="modal fade" id="modificarCitaModal" tabindex="-1" aria-labelledby="modificarCitaLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modificarCitaLabel">Modificar Cita</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="nuevaFecha">Fecha</label>
+                            <input type="date" class="form-control" id="nuevaFecha">
+                        </div>
+                        <div class="form-group">
+                            <label for="nuevasNotas">Notas</label>
+                            <textarea class="form-control" id="nuevasNotas" rows="3"></textarea>
+                        </div>
+                        <button type="button" class="btn btn-danger" onclick="alert('Cita cancelada')">Cancelar Cita</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary">Guardar cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Nueva Cita -->
+    <div class="modal fade" id="nuevaCitaModal" tabindex="-1" aria-labelledby="nuevaCitaLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="nuevaCitaLabel">Solicitar Nueva Cita</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="fechaCita">Fecha</label>
+                            <input type="date" class="form-control" id="fechaCita">
+                        </div>
+                        <div class="form-group">
+                            <label for="horaCita">Hora</label>
+                            <input type="time" class="form-control" id="horaCita">
+                        </div>
+                        <div class="form-group">
+                            <label for="notasCita">Notas</label>
+                            <textarea class="form-control" id="notasCita" rows="3"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary">Solicitar Cita</button>
+                </div>
             </div>
         </div>
     </div>
