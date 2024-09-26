@@ -61,7 +61,7 @@ def registro(request):
             return render(request, 'registro.html')
 
         # Verificar si el correo electrónico o DNI ya existen
-        if User.objects.filter(username=correo_electronico).exists():
+        if User.objects.filter(correo_electronico=correo_electronico).exists():
             messages.error(request, 'El correo electrónico ya está registrado.')
             return render(request, 'registro.html')
 
@@ -80,7 +80,6 @@ def registro(request):
             with transaction.atomic():
                 # Crear el usuario
                 user = User.objects.create_user(
-                    username=correo_electronico,
                     correo_electronico=correo_electronico,
                     email=correo_electronico,
                     password=contrasena,
