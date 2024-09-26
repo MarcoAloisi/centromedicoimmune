@@ -32,7 +32,7 @@
    <div class="header_section">
       <nav class="navbar navbar-expand-lg navbar-light bg-light">
          <div class="logo">
-            <a href="index.html"><img src="{% static 'images/logo_inmune.png' %}" style="width:30%"></a>
+            <a href="index.html"><img src="{% static 'images/logo_inmune.png' %}" style="width:15%"></a>
          </div>
          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
              aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -44,10 +44,10 @@
                   <a class="nav-link" href="index.html">Inicio</a>
                </li>
                <li class="nav-item">
-                  <a class="nav-link" href="health.html">Contacto</a>
+                  <a class="nav-link" href="#contacto_footer">Contacto</a>
                </li>
                <li class="nav-item">
-                  <a class="nav-link" href="{% url 'inicio_sesion' %}">Área Clientes</a>
+                  <a class="nav-link" href="{% url 'inicio_sesion' %}">Área paciente</a>
                </li>
             </ul>
          </div>
@@ -61,10 +61,10 @@
                      <div class="row">
                         <div class="col-md-6">
                            <h1 class="banner_taital">Centro Médico <br><span style="color: #151515;">INMUNE</span></h1>
-                           <p class="banner_text">There are many variations of passages of Lorem Ipsum</p>
+                           <p class="banner_text">Tú centro médico de confianza. Por y para ti.</p>
                            <div class="btn_main">
-                              <div class="more_bt"><a href="#">Pedir Cita</a></div>
-                              <div class="contact_bt"><a href="#">Contacto</a></div>
+                              <div class="more_bt"><a href="{% url 'inicio_sesion' %}">Pedir Cita</a></div>
+                              <div class="contact_bt"><a href="#contacto_footer">Contacto</a></div>
                            </div>
                         </div>
                         <div class="col-md-6">
@@ -76,12 +76,6 @@
             </div>
             <!-- Additional carousel items can be added here -->
          </div>
-         <a class="carousel-control-prev" href="#main_slider" role="button" data-slide="prev">
-            <i class="fa fa-long-arrow-left" style="font-size:24px; padding-top: 4px;"></i>
-         </a>
-         <a class="carousel-control-next" href="#main_slider" role="button" data-slide="next">
-            <i class="fa fa-long-arrow-right" style="font-size:24px; padding-top: 4px;"></i>
-         </a>
       </div>
    </div>
 
@@ -96,18 +90,12 @@
                      <div class="main">
                         <img src="{% static 'images/img-2.png' %}" alt="Avatar" class="image" style="width:100%">
                      </div>
-                     <div class="middle">
-                        <div class="text"><img src="{% static 'images/icon-1.png' %}" style="width: 40px;"></div>
-                     </div>
                   </div>
                </div>
                <div class="col-sm-5">
                   <div class="image_main_1">
                      <div class="main">
                         <img src="{% static 'images/img-3.png' %}" alt="Avatar" class="image" style="width:100%">
-                     </div>
-                     <div class="middle">
-                        <div class="text"><img src="{% static 'images/icon-1.png' %}" style="width: 40px;"></div>
                      </div>
                   </div>
                </div>
@@ -124,9 +112,6 @@
                <h1 class="knowledge_taital">Nuestro Equipo</h1>
                <p class="knowledge_text">Centro Médico INMUNE consta con un gran equipo de médicos y enfermeros que te cuidarán siempre que lo necesites. Especializados en cada área y puestos en lo último en tecnología, siempre aplicarán los tratamientos más recientes para ti.</p>
             </div>
-            <div class="right_main">
-               <div class="play_icon"><a href="#"><img src="{% static 'images/play-icon.png' %}"></a></div>
-            </div>
          </div>
       </div>
    </div>
@@ -140,24 +125,24 @@
                <div class="col-lg-4 col-sm-6">
                   <div class="box_main">
                      <div class="icon_1"><img src="{% static 'images/icon-2.png' %}"></div>
-                     <h4 class="daily_text">Médicos altamente capacitados</h4>
+                     <h2 style="text-align:center;color: white;">Médicos altamente capacitados</h4>
                   </div>
                </div>
                <div class="col-lg-4 col-sm-6">
                   <div class="box_main active">
                      <div class="icon_1"><img src="{% static 'images/icon-3.png' %}"></div>
-                     <h4 class="daily_text_1">Disponibilidad 24/7</h4>
+                     <h2 style="text-align:center;color: black;">Disponibilidad 24/7 los 365 días del año</h4>
                   </div>
                </div>
                <div class="col-lg-4 col-sm-6">
                   <div class="box_main">
                      <div class="icon_1"><img src="{% static 'images/icon-4.png' %}"></div>
-                     <h4 class="daily_text_1">Adaptados a personas con movilidad reducida</h4>
+                     <h2 style="text-align:center;color: white;">Adaptados a personas con movilidad reducida</h4>
                   </div>
                </div>
             </div>
          </div>
-         <div class="getquote_bt"><a href="#">Pedir Cita <span><img src="{% static 'images/right-arrow.png' %}"></span></a></div>
+         <div class="getquote_bt"><a href="{% url 'inicio_sesion' %}">Pedir Cita <span><img src="{% static 'images/right-arrow.png' %}"></span></a></div>
       </div>
    </div>
 
@@ -166,7 +151,7 @@
          <h1 class="contact_taital">Qué hacemos</h1>
          <div class="news_section_2">
             <div class="row">
-               <div class="col-md-6">
+               <div class="col-md-12">
                   <div class="icon_main">
                      <div class="icon_7"><img src="{% static 'images/icon-7.png' %}"></div>
                      <h4 class="diabetes_text">Consulta medicina general y especializaciones</h4>
@@ -190,43 +175,38 @@
          <div class="carousel-inner">
             <div class="carousel-item active">
                <div class="container">
-                  <h1 class="client_taital">Nuestros pacientes nos avalan</h1>
+                  <h1 class="client_taital">Nuestro CEO</h1>
                   <div class="client_section_2">
                      <div class="client_left">
-                        <div><img src="{% static 'images/client-img.png' %}" class="client_img"></div>
+                        <div><img src="../static/images/doctor_francisco_centro_inmune.png" class="client_img"></div>
                      </div>
                      <div class="client_right">
-                        <h3 class="distracted_text">Distracted by</h3>
-                        <p class="lorem_text">It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout...</p>
+                        <h3 class="distracted_text">Dr. FRANCISCO DE LA ROSA</h3>
+                        <p class="lorem_text">Como médico especializado en inmunología y medicina integrativa, he dedicado más de 20 años a ayudar a las personas a fortalecer su sistema inmunológico y alcanzar un bienestar integral. Mi enfoque combina lo mejor de la ciencia y la tecnología con una atención personalizada y cercana.<br><br>En INMUNE creemos que la salud va más allá de tratar síntomas; se trata de prevenir, equilibrar y cuidar cada aspecto de tu bienestar. Junto a un equipo de profesionales comprometidos, trabajamos para ofrecerte tratamientos innovadores y un acompañamiento integral, diseñado para que te sientas apoyado en cada paso hacia una vida más saludable y plena.</p>
                         <div class="quote_icon"><img src="{% static 'images/quote-icon.png' %}"></div>
                      </div>
                   </div>
                </div>
             </div>
-            <!-- Additional carousel items can be added here -->
          </div>
-         <a class="carousel-control-prev" href="#my_slider" role="button" data-slide="prev">
-            <i class="fa fa-long-arrow-left" style="font-size:24px; padding-top: 4px;"></i>
-         </a>
-         <a class="carousel-control-next" href="#my_slider" role="button" data-slide="next">
-            <i class="fa fa-long-arrow-right" style="font-size:24px; padding-top: 4px;"></i>
-         </a>
       </div>
    </div>
 
-   <div class="footer_section layout_padding">
+   <div class="footer_section layout_padding" id="contacto_footer">
       <div class="container">
          <div class="row">
-            <div class="col-lg-3 col-sm-6">
+            <div class="col-lg-4 col-sm-4">
                <div class="footer_logo">
                   <a href="index.html"><img src="{% static 'images/logo_inmune.png' %}" style="width:60%"></a>
                </div>
+            </div>
+            <div class="col-lg-4 col-sm-4">
                <h1 class="adderss_text">Contacta con nosotros</h1>
                <div class="map_icon"><img src="{% static 'images/map-icon.png' %}"><span class="paddlin_left_0">Pº de la Castellana, 89. Madrid</span></div>
                <div class="map_icon"><img src="{% static 'images/call-icon.png' %}"><span class="paddlin_left_0">91 321 45 76</span></div>
                <div class="map_icon"><img src="{% static 'images/mail-icon.png' %}"><span class="paddlin_left_0">info@cminmune.com</span></div>
             </div>
-            <div class="col-lg-3 col-sm-6">
+            <div class="col-lg-4 col-sm-4">
                <h1 class="adderss_text">Doctores</h1>
                <div class="hiphop_text_1">Hay muchos centros médicos buenos en nuestro país, pero te aseguro que como nosotros, ninguno. Estamos encantados de tratarte</div>
             </div>
@@ -236,7 +216,7 @@
 
    <div class="copyright_section">
       <div class="container">
-         <p class="copyright_text">2024 © Todos los derechos reservados. Diseñado por <a href="https://html.design">J.A, A.Y, C.R y M.A</a></p>
+         <p class="copyright_text">2024 © Todos los derechos reservados. Diseñado por  J.A, A.Y, C.R, M.A y A.V</a></p>
       </div>
    </div>
 

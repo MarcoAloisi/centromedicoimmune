@@ -17,7 +17,7 @@ __pycache__/
 .idea/
 
 # Archivos de entorno
-
+.env
 
 # Static files
 staticfiles/
