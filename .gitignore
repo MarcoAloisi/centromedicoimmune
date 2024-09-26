@@ -18,3 +18,8 @@ __pycache__/
 
 # Archivos de entorno
 .env
+
+# Static files
+staticfiles/
+Static/
+```

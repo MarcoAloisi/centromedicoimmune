@@ -8,6 +8,8 @@
    
    <meta name="viewport" content="width=device-width, initial-scale=1">
    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+
+   <link rel="icon" href="../static/images/logo_inmune.png" type="image/x-icon">
    
    <title>Centro Médico INMUNE</title>
    <meta name="keywords" content="">
@@ -45,7 +47,7 @@
                   <a class="nav-link" href="health.html">Contacto</a>
                </li>
                <li class="nav-item">
-                  <a class="nav-link" href="{% url 'registro' %}">Área Clientes</a>
+                  <a class="nav-link" href="{% url 'inicio_sesion' %}">Área Clientes</a>
                </li>
             </ul>
          </div>
@@ -110,7 +112,7 @@
                   </div>
                </div>
             </div>
-            <div class="getquote_bt_1"><a href="#">Pedir Cita <span><img src="{% static 'images/right-arrow.png' %}"></span></a></div>
+            <div class="getquote_bt_1"><a href="{% url 'inicio_sesion' %}">Pedir Cita <span><img src="{% static 'images/right-arrow.png' %}"></span></a></div>
          </div>
       </div>
    </div>

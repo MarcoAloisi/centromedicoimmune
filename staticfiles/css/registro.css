@@ -1,0 +1,12 @@
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 5%;
+    margin-right: 10%;
+    margin-left: 10%;
+}
+
+.top-page {
+    align-items: center;
+    justify-content: center;
+}

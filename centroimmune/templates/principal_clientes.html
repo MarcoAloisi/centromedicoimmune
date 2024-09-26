@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="icon" href="../static/images/logo_inmune.png" type="image/x-icon">
+
+    <title>Portal del Paciente</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container my-5">
+        <!-- Tarjeta de Datos Personales -->
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header bg-info text-white">
+                <h5 class="card-title">Datos Personales</h5>
+            </div>
+            <div class="card-body">
+                <p class="card-text"><strong>Nombre: </strong>Juan</p>
+                <p class="card-text"><strong>Apellidos: </strong>Pérez Real de Asúa</p>
+                <p class="card-text"><strong>DNI: </strong>12345678A</p>
+                <p class="card-text"><strong>Fecha de nacimiento: </strong>01-05-1968</p>
+            </div>
+            <div class="card-footer text-right">
+                <a href="#" class="btn btn-info">Modificar Datos</a>
+            </div>
+        </div>
+
+        <!-- Tarjeta de Próximas Citas -->
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5 class="card-title">Próximas Citas</h5>
+            </div>
+            <div class="card-body">
+                <!-- Si no hay citas -->
+                <!-- <p class="text-center">No tienes ninguna cita pendiente</p> -->
+
+                <!-- Citas disponibles -->
+                <div class="row">
+                    <!-- Card 1 -->
+                    <div class="col-md-4">
+                        <div class="card mb-4 shadow-sm">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="card-title">Consulta Médica</h5>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text"><strong>Fecha: </strong>12 de Octubre, 2024</p>
+                                <p class="card-text"><strong>Hora: </strong>10:00 AM</p>
+                                <p class="card-text"><strong>Médico: </strong>Dr. Juan Pérez</p>
+                                <p class="card-text"><strong>Notas: </strong>Dolor de espalda intenso</p>
+                            </div>
+                            <div class="card-footer">
+                                <a href="#" class="btn btn-primary btn-block">Modificar cita</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="col-md-4">
+                        <div class="card mb-4 shadow-sm">
+                            <div class="card-header bg-success text-white">
+                                <h5 class="card-title">Análisis de Sangre</h5>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text"><strong>Fecha: </strong>15 de Octubre, 2024</p>
+                                <p class="card-text"><strong>Hora: </strong>8:00 AM</p>
+                                <p class="card-text"><strong>Médico: </strong>Dr. Juan Pérez</p>
+                                <p class="card-text"><strong>Notas: </strong>Pruebas LFT, RES, THT</p>
+                            </div>
+                            <div class="card-footer">
+                                <a href="#" class="btn btn-success btn-block">Modificar cita</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="col-md-4">
+                        <div class="card mb-4 shadow-sm">
+                            <div class="card-header bg-warning text-white">
+                                <h5 class="card-title">Resonancia Magnética</h5>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text"><strong>Fecha: </strong>20 de Octubre, 2024</p>
+                                <p class="card-text"><strong>Hora: </strong>11:30 AM</p>
+                                <p class="card-text"><strong>Médico: </strong>Dr. Juan Pérez</p>
+                                <p class="card-text"><strong>Notas: </strong>Análisis exhaustivo en espalda zona inferior</p>
+                            </div>
+                            <div class="card-footer">
+                                <a href="#" class="btn btn-warning btn-block">Modificar cita</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Repetir la estructura de la cita para más citas -->
+                    <!-- <div class="col-md-4 mb-3">
+                        <div class="card shadow-sm">
+                            <div class="card-header bg-success text-white">
+                                <h6 class="card-title">Consulta Médica</h6>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text"><strong>Fecha:</strong> 12 de Octubre, 2024</p>
+                                <p class="card-text"><strong>Hora:</strong> 10:00 AM</p>
+                                <p class="card-text"><strong>Médico:</strong> Dr. Juan Pérez</p>
+                                <p class="card-text"><strong>Especialidad:</strong> Cardiología</p>
+                            </div>
+                        </div>
+                    </div> -->
+                </div>
+            </div>
+            <div class="card-footer text-right">
+                <a href="#" class="btn btn-primary">Solicitar Nueva Cita</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
