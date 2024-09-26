@@ -1,5 +1,8 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.utils.translation import gettext_lazy as _
+from .models import User
+
 from .models import (
     User,
     Paciente,
@@ -14,12 +17,39 @@ from .models import (
 
 # Registro del Modelo Personalizado de Usuario
 class UserAdmin(BaseUserAdmin):
-    fieldsets = BaseUserAdmin.fieldsets + (
-        (None, {'fields': ('rol',)}),
-    )
-    list_display = ('username', 'email', 'first_name', 'last_name', 'rol', 'is_staff')
+    list_display = ('correo_electronico', 'get_nombre', 'get_apellidos', 'rol', 'is_staff')
     list_filter = ('rol', 'is_staff', 'is_superuser', 'is_active')
-    search_fields = ('username', 'email', 'first_name', 'last_name')
+    fieldsets = (
+        (None, {'fields': ('correo_electronico', 'password')}),
+        (_('Permisos'), {'fields': ('rol', 'is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
+        (_('Fechas importantes'), {'fields': ('last_login', 'date_joined')}),
+    )
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('correo_electronico', 'rol', 'password1', 'password2'),
+        }),
+    )
+    search_fields = ('correo_electronico',)
+    ordering = ('correo_electronico',)
+    filter_horizontal = ('groups', 'user_permissions',)
+
+    def get_nombre(self, obj):
+        if obj.rol == 'paciente' and hasattr(obj, 'paciente_profile'):
+            return obj.paciente_profile.nombre
+        elif obj.rol == 'medico' and hasattr(obj, 'medico_profile'):
+            return obj.medico_profile.nombre
+        return '-'
+
+    def get_apellidos(self, obj):
+        if obj.rol == 'paciente' and hasattr(obj, 'paciente_profile'):
+            return obj.paciente_profile.apellidos
+        elif obj.rol == 'medico' and hasattr(obj, 'medico_profile'):
+            return obj.medico_profile.apellidos
+        return '-'
+
+    get_nombre.short_description = 'Nombre'
+    get_apellidos.short_description = 'Apellidos'
 
 admin.site.register(User, UserAdmin)
 

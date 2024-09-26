@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.core.validators import RegexValidator, ValidationError
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
+from django.contrib.auth.base_user import BaseUserManager
 from encrypted_model_fields.fields import EncryptedCharField, EncryptedTextField
 from django.utils import timezone
 import re
@@ -39,12 +40,46 @@ def validate_phone(value):
         raise ValidationError(_('El número de teléfono debe tener 9 dígitos.'))
 
 
+class UserManager(BaseUserManager):
+    def create_user(self, correo_electronico, password=None, **extra_fields):
+        """
+        Crea y guarda un usuario con el correo electrónico y la contraseña proporcionados.
+        """
+        if not correo_electronico:
+            raise ValueError('El correo electrónico debe ser proporcionado')
+        correo_electronico = self.normalize_email(correo_electronico)
+        user = self.model(correo_electronico=correo_electronico, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, correo_electronico, password=None, **extra_fields):
+        """
+        Crea y guarda un superusuario con el correo electrónico y la contraseña proporcionados.
+        """
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault('rol', 'admin')  # Asegúrate de que 'admin' sea un rol válido
+
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError('El superusuario debe tener is_staff=True.')
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError('El superusuario debe tener is_superuser=True.')
+        if extra_fields.get('rol') != 'admin':
+            raise ValueError('El superusuario debe tener rol de admin.')
+
+        return self.create_user(correo_electronico, password, **extra_fields)
+    
 # Modelo de Usuario Personalizado para Manejar Diferentes Tipos de Usuarios
 class User(AbstractUser):
+    # Eliminar el campo 'username'
+    username = None
 
     correo_electronico = models.EmailField(unique=True)
+
     USERNAME_FIELD = 'correo_electronico'
     REQUIRED_FIELDS = []
+
     class Roles(models.TextChoices):
         ADMIN = 'admin', _('Administrador')
         MEDICO = 'medico', _('Personal Médico')
@@ -52,7 +87,7 @@ class User(AbstractUser):
 
     rol = models.CharField(max_length=10, choices=Roles.choices)
 
-    # Añadir related_name personalizado para evitar conflictos
+    # Relación con grupos y permisos personalizados
     groups = models.ManyToManyField(
         Group,
         related_name='custom_user_groups',
@@ -68,8 +103,10 @@ class User(AbstractUser):
         verbose_name=_('permisos de usuario'),
     )
 
+    objects = UserManager()
+
     def __str__(self):
-        return f"{self.username} ({self.get_rol_display()})"
+        return f"{self.correo_electronico} ({self.get_rol_display()})"
 
 # Modelo para Certificaciones (normalizado)
 class Certificacion(models.Model):
