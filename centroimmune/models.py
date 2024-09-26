@@ -171,24 +171,12 @@ class PersonalMedico(models.Model):
         verbose_name = "Personal Médico"
         verbose_name_plural = "Personal Médico"
 
-# Modelo para Categorías de Tratamientos
-class CategoriaTratamiento(models.Model):
-    nombre = models.CharField(max_length=100, unique=True)
-
-    def __str__(self):
-        return self.nombre
-
-    class Meta:
-        verbose_name = "Categoría de Tratamiento"
-        verbose_name_plural = "Categorías de Tratamientos"
 
 # Modelo para Tratamientos
 class Tratamiento(models.Model):
     nombre = models.CharField(max_length=100)
-    descripcion = models.TextField()
+    descripcion = models.TextField(blank=True, null=True)
     costo = models.DecimalField(max_digits=10, decimal_places=2)
-    categoria = models.ForeignKey(CategoriaTratamiento, on_delete=models.SET_NULL, null=True, blank=True, related_name='tratamientos')
-    duracion = models.DurationField(null=True, blank=True)
 
     def __str__(self):
         return self.nombre
@@ -196,8 +184,6 @@ class Tratamiento(models.Model):
     def clean(self):
         if self.costo <= 0:
             raise ValidationError({'costo': 'El costo debe ser un valor positivo.'})
-        if self.duracion and self.duracion.total_seconds() <= 0:
-            raise ValidationError({'duracion': 'La duración debe ser un valor positivo.'})
 
     def save(self, *args, **kwargs):
         self.full_clean()

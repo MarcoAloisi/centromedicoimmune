@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.utils import timezone
 from django.core.cache import cache
@@ -6,15 +6,15 @@ from datetime import datetime
 from django.db import transaction
 from django.core.exceptions import ValidationError
 from django.contrib.auth import authenticate, login
-from .models import User, Paciente, Cita
+from .models import User, Paciente, Cita, PersonalMedico
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError as DjangoValidationError
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
-from .forms import CitaForm
+from .forms import SolicitarCitaForm, AsignarTratamientoForm
+
 
 def registro(request):
     if request.method == 'POST':
@@ -144,7 +144,7 @@ def inicio_sesion(request):
             login(request, user)
             # Resetea el contador de intentos fallidos
             cache.delete(cache_key)
-            return redirect('portal_paciente')
+            return redirect('portal_usuario')
         else:
             # Incrementa el contador de intentos fallidos
             attempts += 1
@@ -157,109 +157,209 @@ def inicio_sesion(request):
     return render(request, 'inicio_sesion.html')
 
 
+def index(request):
+    return render(request, 'index.html')
+
+
+def is_medico(user):
+    return user.rol == 'medico'
+
+def is_paciente(user):
+    return user.rol == 'paciente'
 
 @login_required
-def portal_paciente(request):
-    # Verificar que el usuario tiene el rol de paciente
-    if request.user.rol != 'paciente':
-        return HttpResponse("No tienes permisos para acceder a esta página.")
+def portal_usuario(request):
+    user = request.user
 
-    # Intentar obtener el perfil de paciente asociado al usuario
-    try:
-        paciente = request.user.paciente_profile
-    except Paciente.DoesNotExist:
-        return HttpResponse("No tienes un perfil de paciente.")
+    if user.rol == 'paciente':
+        try:
+            paciente = user.paciente_profile
+        except Paciente.DoesNotExist:
+            return HttpResponse("No tienes un perfil de paciente.")
 
-    # Obtener las próximas citas del paciente
-    citas = Cita.objects.filter(
-        paciente=paciente,
-        fecha__gte=timezone.now()
-    ).order_by('fecha')
+        # Obtener las próximas citas del paciente
+        citas = Cita.objects.filter(
+            paciente=paciente,
+            fecha__gte=timezone.now()
+        ).select_related('tratamiento', 'personal_medico').order_by('fecha')
 
-    # Inicializar el formulario para solicitar nueva cita
-    form_nueva_cita = CitaForm()
+        # Inicializar el formulario para solicitar nueva cita
+        form_nueva_cita = SolicitarCitaForm()
 
-    # Crear una lista de tuplas (cita, formulario_modificar)
-    citas_modificar_forms = []
-    for cita in citas:
-        form_modificar = CitaForm(instance=cita)
-        citas_modificar_forms.append((cita, form_modificar))
+        # Crear una lista de tuplas (cita, formulario_modificar)
+        citas_modificar_forms = []
+        for cita in citas:
+            form_modificar = SolicitarCitaForm(instance=cita)
+            citas_modificar_forms.append((cita, form_modificar))
 
-    context = {
-        'paciente': paciente,
-        'citas': citas,
-        'form_nueva_cita': form_nueva_cita,
-        'citas_modificar_forms': citas_modificar_forms,  # Añadimos esta línea
-    }
+        context = {
+            'paciente': paciente,
+            'citas': citas,
+            'form_nueva_cita': form_nueva_cita,
+            'citas_modificar_forms': citas_modificar_forms,
+            'rol': 'paciente',
+        }
+
+    elif user.rol == 'medico':
+        try:
+            medico = user.medico_profile
+        except PersonalMedico.DoesNotExist:
+            return HttpResponse("No tienes un perfil de médico.")
+
+        # Obtener todas las citas del médico
+        citas = Cita.objects.filter(
+            personal_medico=medico,
+            fecha__gte=timezone.now()
+        ).select_related('tratamiento', 'paciente').order_by('fecha')
+
+        # Crear una lista de tuplas (cita, formulario_modificar)
+        citas_modificar_forms = []
+        for cita in citas:
+            form_modificar = SolicitarCitaForm(instance=cita)
+            citas_modificar_forms.append((cita, form_modificar))
+
+        context = {
+            'medico': medico,
+            'citas': citas,
+            'citas_modificar_forms': citas_modificar_forms,
+            'rol': 'medico',
+        }
+
+    else:
+        return HttpResponse("Rol de usuario no reconocido.")
 
     return render(request, 'principal_clientes.html', context)
 
+@login_required
+@user_passes_test(is_medico)
+def asignar_tratamiento(request, cita_id):
+    user = request.user
+    try:
+        medico = user.medico_profile
+    except PersonalMedico.DoesNotExist:
+        return HttpResponse("No tienes un perfil de médico.")
+
+    cita = get_object_or_404(Cita, id=cita_id, personal_medico=medico)
+
+    if request.method == 'POST':
+        form = AsignarTratamientoForm(request.POST)
+        if form.is_valid():
+            tratamiento = form.save()
+            cita.tratamiento = tratamiento
+            cita.save()
+            messages.success(request, 'Tratamiento asignado exitosamente.')
+            return redirect('portal_usuario')
+        else:
+            messages.error(request, 'Error al asignar el tratamiento.')
+    else:
+        form = AsignarTratamientoForm()
+
+    # Redirigir de vuelta al portal con los mensajes
+    return redirect('portal_usuario')
 
 @login_required
 def solicitar_cita(request):
-    if request.user.rol != 'paciente':
+    user = request.user
+
+    if user.rol != 'paciente':
         return HttpResponse("No tienes permisos para acceder a esta página.")
 
     try:
-        paciente = request.user.paciente_profile
+        paciente = user.paciente_profile
     except Paciente.DoesNotExist:
         return HttpResponse("No tienes un perfil de paciente.")
 
     if request.method == 'POST':
-        form = CitaForm(request.POST)
+        form = SolicitarCitaForm(request.POST)
         if form.is_valid():
             nueva_cita = form.save(commit=False)
             nueva_cita.paciente = paciente
             nueva_cita.estado = Cita.EstadosCita.PROGRAMADA
             nueva_cita.save()
             messages.success(request, 'Su cita ha sido solicitada exitosamente.')
-            return redirect('portal_paciente')
+            return redirect('portal_usuario')
         else:
-            # Si hay errores, renderizar nuevamente el portal con los errores
-            citas = Cita.objects.filter(
-                paciente=paciente,
-                fecha__gte=timezone.now()
-            ).order_by('fecha')
-            context = {
-                'paciente': paciente,
-                'citas': citas,
-                'form_nueva_cita': form,  # Form con errores
-            }
-            return render(request, 'principal_clientes.html', context)
+            messages.error(request, 'Hubo un error al solicitar la cita.')
     else:
-        return redirect('portal_paciente')
+        form = SolicitarCitaForm()
 
+    # En caso de error, renderizar nuevamente el portal con los errores
+    citas = Cita.objects.filter(
+        paciente=paciente,
+        fecha__gte=timezone.now()
+    ).select_related('tratamiento', 'personal_medico').order_by('fecha')
+    form_nueva_cita = form
+    citas_modificar_forms = []
+    for cita in citas:
+        form_modificar = SolicitarCitaForm(instance=cita)
+        citas_modificar_forms.append((cita, form_modificar))
+    context = {
+        'paciente': paciente,
+        'citas': citas,
+        'form_nueva_cita': form_nueva_cita,
+        'citas_modificar_forms': citas_modificar_forms,
+        'rol': 'paciente',
+    }
+    return render(request, 'principal_clientes.html', context)
 
 @login_required
 def modificar_cita(request, cita_id):
-    if request.user.rol != 'paciente':
+    user = request.user
+
+    if user.rol != 'paciente':
         return HttpResponse("No tienes permisos para acceder a esta página.")
 
-    paciente = get_object_or_404(Paciente, user=request.user)
+    try:
+        paciente = user.paciente_profile
+    except Paciente.DoesNotExist:
+        return HttpResponse("No tienes un perfil de paciente.")
+
     cita = get_object_or_404(Cita, id=cita_id, paciente=paciente)
 
     if request.method == 'POST':
-        form = CitaForm(request.POST, instance=cita)
+        form = SolicitarCitaForm(request.POST, instance=cita)
         if form.is_valid():
             form.save()
             messages.success(request, 'Cita modificada exitosamente.')
-            return redirect('portal_paciente')
+            return redirect('portal_usuario')
         else:
-            # Si hay errores, renderizar nuevamente el portal con los errores
-            citas = Cita.objects.filter(
-                paciente=paciente,
-                fecha__gte=timezone.now()
-            ).order_by('fecha')
-            context = {
-                'paciente': paciente,
-                'citas': citas,
-                'form_nueva_cita': CitaForm(),  # Form para nueva cita
-                'form_modificar_cita': form,  # Form con errores
-                'cita': cita,  # Cita que se está modificando
-            }
-            return render(request, 'principal_clientes.html', context)
+            messages.error(request, 'Hubo un error al modificar la cita.')
     else:
-        return redirect('portal_paciente')
+        form = SolicitarCitaForm(instance=cita)
 
-def index(request):
-    return render(request, 'index.html')
+    # En caso de error, renderizar nuevamente el portal con los errores
+    citas = Cita.objects.filter(
+        paciente=paciente,
+        fecha__gte=timezone.now()
+    ).select_related('tratamiento', 'personal_medico').order_by('fecha')
+    form_nueva_cita = SolicitarCitaForm()
+    citas_modificar_forms = []
+    for cita in citas:
+        form_modificar = SolicitarCitaForm(instance=cita)
+        citas_modificar_forms.append((cita, form_modificar))
+    context = {
+        'paciente': paciente,
+        'citas': citas,
+        'form_nueva_cita': form_nueva_cita,
+        'citas_modificar_forms': citas_modificar_forms,
+        'rol': 'paciente',
+    }
+    return render(request, 'principal_clientes.html', context)
+
+@login_required
+def cancelar_cita(request, cita_id):
+    user = request.user
+    try:
+        paciente = user.paciente_profile
+    except Paciente.DoesNotExist:
+        return HttpResponse("No tienes un perfil de paciente.")
+
+    cita = get_object_or_404(Cita, id=cita_id, paciente=paciente)
+
+    if request.method == 'POST' or request.method == 'GET':
+        cita.estado = Cita.EstadosCita.CANCELADA
+        cita.save()
+        messages.success(request, 'La cita ha sido cancelada exitosamente.')
+        return redirect('portal_usuario')
+
+    return redirect('portal_usuario')

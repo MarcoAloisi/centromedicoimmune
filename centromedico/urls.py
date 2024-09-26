@@ -18,19 +18,16 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path
-from centroimmune.views import (
-    index,
-    registro,
-    inicio_sesion,
-    portal_paciente,
-    solicitar_cita
-)
+from centroimmune import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', index, name='index'),  # Mapea la URL raíz al índice
-    path('registro/', registro, name='registro'),
-    path('inicio_sesion/', inicio_sesion, name='inicio_sesion'),
-    path('portal_paciente/', portal_paciente, name='portal_paciente'),  # Añade esta línea
-    path('solicitar_cita/', solicitar_cita, name='solicitar_cita'),      # Y esta línea
+    path('', views.index, name='index'),
+    path('registro/', views.registro, name='registro'),
+    path('inicio_sesion/', views.inicio_sesion, name='inicio_sesion'),
+    path('portal/', views.portal_usuario, name='portal_usuario'),
+    path('solicitar_cita/', views.solicitar_cita, name='solicitar_cita'),
+    path('modificar_cita/<int:cita_id>/', views.modificar_cita, name='modificar_cita'),
+    path('asignar_tratamiento/<int:cita_id>/', views.asignar_tratamiento, name='asignar_tratamiento'),
+    path('cancelar_cita/<int:cita_id>/', views.cancelar_cita, name='cancelar_cita'),
+    # ... otras rutas ...
 ]

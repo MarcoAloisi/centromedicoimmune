@@ -1,16 +1,14 @@
+# forms.py
+
 from django import forms
 from .models import Cita, Tratamiento, PersonalMedico
 from django.utils import timezone
 from django.core.exceptions import ValidationError
 
-class CitaForm(forms.ModelForm):
+class SolicitarCitaForm(forms.ModelForm):
     fecha = forms.DateTimeField(
-        widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}),
+        widget=forms.DateTimeInput(attrs={'type': 'datetime-local', 'min': timezone.now().isoformat()}),
         label='Fecha y Hora'
-    )
-    tratamiento = forms.ModelChoiceField(
-        queryset=Tratamiento.objects.all(),
-        label='Tratamiento'
     )
     personal_medico = forms.ModelChoiceField(
         queryset=PersonalMedico.objects.all(),
@@ -24,7 +22,7 @@ class CitaForm(forms.ModelForm):
 
     class Meta:
         model = Cita
-        fields = ['fecha', 'tratamiento', 'personal_medico', 'motivo']
+        fields = ['fecha', 'personal_medico', 'motivo']
 
     def clean_fecha(self):
         fecha = self.cleaned_data.get('fecha')
@@ -45,3 +43,26 @@ class CitaForm(forms.ModelForm):
                 overlapping_citas = overlapping_citas.exclude(pk=self.instance.pk)
             if overlapping_citas.exists():
                 raise ValidationError('El médico seleccionado no está disponible en la fecha y hora seleccionadas.')
+
+
+class AsignarTratamientoForm(forms.ModelForm):
+    class Meta:
+        model = Tratamiento
+        fields = ['nombre', 'descripcion', 'costo']
+        widgets = {
+            'nombre': forms.TextInput(attrs={'class': 'form-control'}),
+            'descripcion': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'costo': forms.NumberInput(attrs={'class': 'form-control'}),
+ 
+        }
+        labels = {
+            'nombre': 'Nombre del Tratamiento',
+            'descripcion': 'Descripción del Tratamiento',
+            'costo': 'Costo',
+        }
+
+    def clean_costo(self):
+        costo = self.cleaned_data.get('costo')
+        if costo <= 0:
+            raise forms.ValidationError('El costo debe ser un valor positivo.')
+        return costo
