@@ -6,9 +6,15 @@ from datetime import datetime
 from django.db import transaction
 from django.core.exceptions import ValidationError
 from django.contrib.auth import authenticate, login
-from .models import User, Paciente
+from .models import User, Paciente, Cita
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError as DjangoValidationError
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
+from .forms import SolicitarCitaForm
 
 def registro(request):
     if request.method == 'POST':
@@ -139,7 +145,7 @@ def inicio_sesion(request):
             login(request, user)
             # Resetea el contador de intentos fallidos
             cache.delete(cache_key)
-            return redirect('index')  # Redirigir al index después de iniciar sesión
+            return redirect('portal_paciente')
         else:
             # Incrementa el contador de intentos fallidos
             attempts += 1
@@ -151,6 +157,60 @@ def inicio_sesion(request):
 
     return render(request, 'inicio_sesion.html')
 
+
+
+@login_required
+def portal_paciente(request):
+    # Verificar que el usuario tiene el rol de paciente
+    if request.user.rol != 'paciente':
+        return HttpResponse("No tienes permisos para acceder a esta página.")
+
+    # Intentar obtener el perfil de paciente asociado al usuario
+    try:
+        paciente = request.user.paciente_profile
+    except Paciente.DoesNotExist:
+        return HttpResponse("No tienes un perfil de paciente.")
+
+    # Obtener las próximas citas del paciente
+    citas = Cita.objects.filter(
+        paciente=paciente,
+        fecha__gte=timezone.now()
+    ).order_by('fecha')
+
+    context = {
+        'paciente': paciente,
+        'citas': citas,
+    }
+
+    return render(request, 'principal_clientes.html', context)
+
+
+@login_required
+def solicitar_cita(request):
+    if request.user.rol != 'paciente':
+        return HttpResponse("No tienes permisos para acceder a esta página.")
+
+    try:
+        paciente = request.user.paciente_profile
+    except Paciente.DoesNotExist:
+        return HttpResponse("No tienes un perfil de paciente.")
+
+    if request.method == 'POST':
+        form = SolicitarCitaForm(request.POST)
+        if form.is_valid():
+            nueva_cita = form.save(commit=False)
+            nueva_cita.paciente = paciente
+            nueva_cita.estado = Cita.EstadosCita.PROGRAMADA
+            nueva_cita.save()
+            messages.success(request, 'Su cita ha sido solicitada exitosamente.')
+            return redirect('portal_paciente')
+    else:
+        form = SolicitarCitaForm()
+
+    context = {
+        'form': form
+    }
+    return render(request, 'solicitar_cita.html', context)
 
 def index(request):
     return render(request, 'index.html')
