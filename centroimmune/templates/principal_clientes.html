@@ -1,22 +1,26 @@
+<!-- centroimmune/templates/principal_clientes.html -->
+
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <link rel="icon" href="../static/images/logo_inmune.png" type="image/x-icon">
+    <link rel="icon" href="{% static 'images/logo_inmune.png' %}" type="image/x-icon">
 
     <title>Portal del Paciente</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
+    <!-- Navbar -->
     <div>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="logo">
-               <a href="principal_clientes.html"><img src="../static/images/logo_inmune.png" style="width:10%"></a>
+               <a href="{% url 'portal_paciente' %}"><img src="{% static 'images/logo_inmune.png' %}" style="width:10%"></a>
             </div>
             <div>
-                <h3>Portal del paciente</h1>
+                <h3>Portal del Paciente</h3>
             </div>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                <ul class="navbar-nav mr-auto">
@@ -27,6 +31,22 @@
             </div>
          </nav>
     </div>
+
+    <!-- Mensajes de Éxito/Error -->
+    <div class="container my-3">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Cerrar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <!-- Contenedor Principal -->
     <div class="container my-5">
         <!-- Tarjeta de Datos Personales -->
         <div class="card mb-4 shadow-sm">
@@ -34,10 +54,10 @@
                 <h5 class="card-title">Datos Personales</h5>
             </div>
             <div class="card-body">
-                <p class="card-text"><strong>Nombre: </strong>Juan</p>
-                <p class="card-text"><strong>Apellidos: </strong>Pérez Real de Asúa</p>
-                <p class="card-text"><strong>DNI: </strong>12345678A</p>
-                <p class="card-text"><strong>Fecha de nacimiento: </strong>01-05-1968</p>
+                <p class="card-text"><strong>Nombre: </strong>{{ paciente.nombre }}</p>
+                <p class="card-text"><strong>Apellidos: </strong>{{ paciente.apellidos }}</p>
+                <p class="card-text"><strong>DNI: </strong>{{ paciente.dni }}</p>
+                <p class="card-text"><strong>Fecha de nacimiento: </strong>{{ paciente.fecha_nacimiento|date:"d-m-Y" }}</p>
             </div>
             <div class="card-footer text-right">
                 <a href="#" class="btn btn-info">Modificar Datos</a>
@@ -50,140 +70,100 @@
                 <h5 class="card-title">Próximas Citas</h5>
             </div>
             <div class="card-body">
-                <!-- Si no hay citas -->
-                <!-- <p class="text-center">No tienes ninguna cita pendiente</p> -->
+                {% if citas %}
+                    <div class="row">
+                        {% for cita, form_modificar in citas_modificar_forms %}
+                            <div class="col-md-4">
+                                <div class="card mb-4 shadow-sm">
+                                    <!-- Asignar color según el estado de la cita -->
+                                    {% if cita.estado == 'Programada' %}
+                                        <div class="card-header bg-primary text-white">
+                                    {% elif cita.estado == 'Completada' %}
+                                        <div class="card-header bg-success text-white">
+                                    {% elif cita.estado == 'Cancelada' %}
+                                        <div class="card-header bg-danger text-white">
+                                    {% elif cita.estado == 'No Show' %}
+                                        <div class="card-header bg-warning text-white">
+                                    {% else %}
+                                        <div class="card-header bg-secondary text-white">
+                                    {% endif %}
+                                        <h5 class="card-title">{{ cita.tratamiento.nombre }}</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <p class="card-text"><strong>Fecha: </strong>{{ cita.fecha|date:"j 'de' F, Y" }}</p>
+                                        <p class="card-text"><strong>Hora: </strong>{{ cita.fecha|time:"H:i" }}</p>
+                                        <p class="card-text"><strong>Médico: </strong>{{ cita.personal_medico.nombre }} {{ cita.personal_medico.apellidos }}</p>
+                                        <p class="card-text"><strong>Estado: </strong>{{ cita.get_estado_display }}</p>
+                                        <p class="card-text"><strong>Notas: </strong>{{ cita.motivo }}</p>
+                                    </div>
+                                    <div class="card-footer">
+                                        <!-- Enlace para modificar la cita -->
+                                        <a href="#" class="btn btn-primary btn-block" data-toggle="modal" data-target="#modificarCitaModal{{ cita.id }}">Modificar cita</a>
+                                    </div>
+                                </div>
+                            </div>
 
-                <!-- Citas disponibles -->
-                <div class="row">
-                    <!-- Card 1 -->
-                    <div class="col-md-4">
-                        <div class="card mb-4 shadow-sm">
-                            <div class="card-header bg-primary text-white">
-                                <h5 class="card-title">Consulta Médica</h5>
+                            <!-- Modal para Modificar Cita -->
+                            <div class="modal fade" id="modificarCitaModal{{ cita.id }}" tabindex="-1" aria-labelledby="modificarCitaLabel{{ cita.id }}" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <form method="post" action="{% url 'modificar_cita' cita.id %}">
+                                            {% csrf_token %}
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="modificarCitaLabel{{ cita.id }}">Modificar Cita</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                {{ form_modificar.as_p }}
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="card-body">
-                                <p class="card-text"><strong>Fecha: </strong>12 de Octubre, 2024</p>
-                                <p class="card-text"><strong>Hora: </strong>10:00 AM</p>
-                                <p class="card-text"><strong>Médico: </strong>Dr. Juan Pérez</p>
-                                <p class="card-text"><strong>Notas: </strong>Dolor de espalda intenso</p>
-                            </div>
-                            <div class="card-footer">
-                                <a href="#" class="btn btn-primary btn-block" data-toggle="modal" data-target="#modificarCitaModal">Modificar cita</a>
-                            </div>
-                        </div>
+                        {% endfor %}
                     </div>
-
-                    <!-- Card 2 -->
-                    <div class="col-md-4">
-                        <div class="card mb-4 shadow-sm">
-                            <div class="card-header bg-success text-white">
-                                <h5 class="card-title">Análisis de Sangre</h5>
-                            </div>
-                            <div class="card-body">
-                                <p class="card-text"><strong>Fecha: </strong>15 de Octubre, 2024</p>
-                                <p class="card-text"><strong>Hora: </strong>8:00 AM</p>
-                                <p class="card-text"><strong>Médico: </strong>Dr. Juan Pérez</p>
-                                <p class="card-text"><strong>Notas: </strong>Pruebas LFT, RES, THT</p>
-                            </div>
-                            <div class="card-footer">
-                                <a href="#" class="btn btn-success btn-block" data-toggle="modal" data-target="#modificarCitaModal">Modificar cita</a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Card 3 -->
-                    <div class="col-md-4">
-                        <div class="card mb-4 shadow-sm">
-                            <div class="card-header bg-warning text-white">
-                                <h5 class="card-title">Resonancia Magnética</h5>
-                            </div>
-                            <div class="card-body">
-                                <p class="card-text"><strong>Fecha: </strong>20 de Octubre, 2024</p>
-                                <p class="card-text"><strong>Hora: </strong>11:30 AM</p>
-                                <p class="card-text"><strong>Médico: </strong>Dr. Juan Pérez</p>
-                                <p class="card-text"><strong>Notas: </strong>Análisis exhaustivo en espalda zona inferior</p>
-                            </div>
-
-                            <div class="card-footer">
-                                <a href="#" class="btn btn-warning btn-block" data-toggle="modal" data-target="#modificarCitaModal">Modificar cita</a>
-                            </div>
-                        </div>
-                    </div>
-                    
-                </div>
+                {% else %}
+                    <p class="text-center">No tienes ninguna cita pendiente</p>
+                {% endif %}
             </div>
             <div class="card-footer text-right">
+                <!-- Botón para abrir el modal de Nueva Cita -->
                 <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#nuevaCitaModal">Solicitar Nueva Cita</a>
             </div>
         </div>
     </div>
 
-    <!-- Modal para Modificar Cita -->
-    <div class="modal fade" id="modificarCitaModal" tabindex="-1" aria-labelledby="modificarCitaLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modificarCitaLabel">Modificar Cita</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        <div class="form-group">
-                            <label for="nuevaFecha">Fecha</label>
-                            <input type="date" class="form-control" id="nuevaFecha">
-                        </div>
-                        <div class="form-group">
-                            <label for="nuevasNotas">Notas</label>
-                            <textarea class="form-control" id="nuevasNotas" rows="3"></textarea>
-                        </div>
-                        <button type="button" class="btn btn-danger" onclick="alert('Cita cancelada')">Cancelar Cita</button>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary">Guardar cambios</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal para Nueva Cita -->
+    <!-- Modal para Solicitar Nueva Cita -->
     <div class="modal fade" id="nuevaCitaModal" tabindex="-1" aria-labelledby="nuevaCitaLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="nuevaCitaLabel">Solicitar Nueva Cita</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        <div class="form-group">
-                            <label for="fechaCita">Fecha</label>
-                            <input type="date" class="form-control" id="fechaCita">
-                        </div>
-                        <div class="form-group">
-                            <label for="horaCita">Hora</label>
-                            <input type="time" class="form-control" id="horaCita">
-                        </div>
-                        <div class="form-group">
-                            <label for="notasCita">Notas</label>
-                            <textarea class="form-control" id="notasCita" rows="3"></textarea>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary">Solicitar Cita</button>
-                </div>
+                <form method="post" action="{% url 'solicitar_cita' %}">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="nuevaCitaLabel">Solicitar Nueva Cita</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        {{ form_nueva_cita.as_p }}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Solicitar Cita</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 
-    <!-- Bootstrap JS and dependencies -->
+    <!-- Bootstrap JS y dependencias -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

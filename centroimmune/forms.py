@@ -1,9 +1,9 @@
 from django import forms
-from .models import Tratamiento, Cita, PersonalMedico
+from .models import Cita, Tratamiento, PersonalMedico
 from django.utils import timezone
 from django.core.exceptions import ValidationError
 
-class SolicitarCitaForm(forms.ModelForm):
+class CitaForm(forms.ModelForm):
     fecha = forms.DateTimeField(
         widget=forms.DateTimeInput(attrs={'type': 'datetime-local'}),
         label='Fecha y Hora'
@@ -12,14 +12,14 @@ class SolicitarCitaForm(forms.ModelForm):
         queryset=Tratamiento.objects.all(),
         label='Tratamiento'
     )
+    personal_medico = forms.ModelChoiceField(
+        queryset=PersonalMedico.objects.all(),
+        label='Médico'
+    )
     motivo = forms.CharField(
         widget=forms.Textarea(attrs={'rows': 3}),
         label='Motivo de la cita',
         required=False
-    )
-    personal_medico = forms.ModelChoiceField(
-        queryset=PersonalMedico.objects.all(),
-        label='Personal Médico'
     )
 
     class Meta:
@@ -27,8 +27,8 @@ class SolicitarCitaForm(forms.ModelForm):
         fields = ['fecha', 'tratamiento', 'personal_medico', 'motivo']
 
     def clean_fecha(self):
-        fecha = self.cleaned_data['fecha']
-        if fecha < timezone.now():
+        fecha = self.cleaned_data.get('fecha')
+        if fecha and fecha < timezone.now():
             raise ValidationError('La fecha de la cita no puede ser en el pasado.')
         return fecha
 
@@ -41,5 +41,7 @@ class SolicitarCitaForm(forms.ModelForm):
                 personal_medico=personal_medico,
                 fecha=fecha
             )
+            if self.instance.pk:
+                overlapping_citas = overlapping_citas.exclude(pk=self.instance.pk)
             if overlapping_citas.exists():
-                raise ValidationError('El personal médico seleccionado no está disponible en la fecha y hora seleccionadas.')
+                raise ValidationError('El médico seleccionado no está disponible en la fecha y hora seleccionadas.')
