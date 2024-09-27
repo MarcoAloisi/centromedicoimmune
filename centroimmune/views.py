@@ -212,16 +212,17 @@ def portal_usuario(request):
             fecha__gte=timezone.now()
         ).select_related('tratamiento', 'paciente').order_by('fecha')
 
-        # Crear una lista de tuplas (cita, formulario_modificar)
-        citas_modificar_forms = []
+        # Crear una lista de tuplas (cita, formulario_asignar_tratamiento)
+        asignar_tratamiento_forms = []
         for cita in citas:
-            form_modificar = SolicitarCitaForm(instance=cita)
-            citas_modificar_forms.append((cita, form_modificar))
+            # Crear formulario para asignar tratamiento
+            form_asignar_tratamiento = AsignarTratamientoForm(instance=cita.tratamiento)
+            asignar_tratamiento_forms.append((cita, form_asignar_tratamiento))
 
         context = {
             'medico': medico,
             'citas': citas,
-            'citas_modificar_forms': citas_modificar_forms,
+            'asignar_tratamiento_forms': asignar_tratamiento_forms,
             'rol': 'medico',
         }
 
@@ -229,6 +230,7 @@ def portal_usuario(request):
         return HttpResponse("Rol de usuario no reconocido.")
 
     return render(request, 'principal_clientes.html', context)
+
 
 @login_required
 @user_passes_test(is_medico)
