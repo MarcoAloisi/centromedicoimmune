@@ -1,44 +1,45 @@
+<!-- templates/inicio_sesion.html -->
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
-   <meta charset="utf-8">
-   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-   
-   <meta name="viewport" content="width=device-width, initial-scale=1">
-   <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-   <link rel="icon" href="../static/images/logo_inmune.png" type="image/x-icon">
-   
-   <title>Área Clientes - INMUNE</title>
-   <meta name="keywords" content="">
-   <meta name="description" content="">
-   <meta name="author" content="">
-   
-   <!-- CSS Files -->
-   <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-   <link rel="stylesheet" href="{% static 'css/inicio_sesion.css' %}">
-   <link rel="stylesheet" href="{% static 'css/style.css' %}">
-   <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
-   <link rel="stylesheet" href="{% static 'css/jquery.mCustomScrollbar.min.css' %}">
-   <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}">
-   <link rel="stylesheet" href="{% static 'css/owl.theme.default.min.css' %}">
-   <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
-   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css" media="screen">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+
+    <link rel="icon" href="../static/images/logo_inmune.png" type="image/x-icon">
+
+    <title>Área Clientes - INMUNE</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/inicio_sesion.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
+    <link rel="stylesheet" href="{% static 'css/jquery.mCustomScrollbar.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/owl.theme.default.min.css' %}">
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css" media="screen">
 </head>
 
 <body>
-   <div class="top-page row g-3">
-       <img src="{% static 'images/logo_inmune.png' %}" width="10%"/>
-       <h1 style="margin-left: 10%;">Inicio de sesión</h1>
-   </div>
-   
-   {% if messages %}
-       {% for message in messages %}
-           <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-       {% endfor %}
-   {% endif %}
+    <div class="top-page row g-3">
+        <img src="{% static 'images/logo_inmune.png' %}" width="10%" />
+        <h1 style="margin-left: 10%;">Inicio de sesión</h1>
+    </div>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
 
     <form class="col" method="post" style="text-align: -webkit-center;">
         {% csrf_token %}
@@ -53,7 +54,7 @@
             <label for="inputPassword4" class="form-label">Contraseña *</label>
             <input type="password" class="form-control" id="inputPassword4" name="contrasena" required>
         </div>
-        
+
         <!-- Botón de Enviar -->
         <div class="col-12" style="margin-bottom: 10%;">
             <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
@@ -65,31 +66,55 @@
         </div>
     </form>
 
+    <!-- Modal de Verificación de 2FA -->
+    <div class="modal fade" id="twoFactorModal" tabindex="-1" aria-labelledby="twoFactorModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="twoFactorModalLabel">Verificación de 2FA</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="inputToken" class="form-label">Código de Verificación *</label>
+                            <input type="text" class="form-control" id="inputToken" name="token" required>
+                        </div>
+                        <div class="mb-3 text-center">
+                            <a href="{% url 'resend_2fa_token' %}">¿No recibiste el código? Reenviar</a>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Verificar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
-   <!-- JavaScript Files -->
-   <script src="{% static 'js/jquery.min.js' %}"></script>
-   <script src="{% static 'js/popper.min.js' %}"></script>
-   <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
-   <script src="{% static 'js/jquery-3.0.0.min.js' %}"></script>
-   <script src="{% static 'js/plugin.js' %}"></script>
-   <script src="{% static 'js/jquery.mCustomScrollbar.concat.min.js' %}"></script>
-   <script src="{% static 'js/custom.js' %}"></script>
-   <script src="{% static 'js/owl.carousel.js' %}"></script>
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js"></script>
-   <script src="https://cdn.jsdelivr.net/npm/@coreui/coreui@4.0.0/dist/js/coreui.bundle.min.js"></script>
+    <!-- JavaScript Files -->
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/popper.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    <!-- Elimina la segunda inclusión de jQuery para evitar conflictos -->
+    <!-- <script src="{% static 'js/jquery-3.0.0.min.js' %}"></script> -->
+    <script src="{% static 'js/plugin.js' %}"></script>
+    <script src="{% static 'js/jquery.mCustomScrollbar.concat.min.js' %}"></script>
+    <script src="{% static 'js/custom.js' %}"></script>
+    <script src="{% static 'js/owl.carousel.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@coreui/coreui@4.0.0/dist/js/coreui.bundle.min.js"></script>
 
-   <!-- Initialize Datepicker -->
-   <script>
-       $(document).ready(function() {
-         // Initialize the Date Picker
-         $("#datepicker").datepicker({
-           dateFormat: "dd-mm-yy",
-           changeMonth: true,
-           changeYear: true,
-           yearRange: "1900:2024"
-         });
-       });
-   </script>
+    <!-- Inicializar el Modal si show_2fa es True -->
+    <script>
+        $(document).ready(function () {
+            var show2FA = {{ show_2fa|yesno:"true,false" }};
+            if (show2FA) {
+                $('#twoFactorModal').modal('show');
+            }
+        });
+    </script>
 </body>
 
 </html>

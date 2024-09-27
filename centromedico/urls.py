@@ -24,6 +24,7 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('registro/', views.registro, name='registro'),
     path('inicio_sesion/', views.inicio_sesion, name='inicio_sesion'),
+    path('resend-2fa-token/', views.resend_2fa_token, name='resend_2fa_token'),
     path('portal/', views.portal_usuario, name='portal_usuario'),
     path('solicitar_cita/', views.solicitar_cita, name='solicitar_cita'),
     path('modificar_cita/<int:cita_id>/', views.modificar_cita, name='modificar_cita'),

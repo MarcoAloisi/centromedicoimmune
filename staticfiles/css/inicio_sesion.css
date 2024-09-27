@@ -10,3 +10,24 @@
     align-items: center;
     justify-content: center;
 }
+
+.logo-small {
+    width: 10%;
+}
+
+.header-title {
+    margin-left: 10%;
+}
+
+.centered-form {
+    text-align: center; /* Avoid -webkit-center */
+}
+
+.input-group {
+    margin-top: 4%;
+    margin-bottom: 2%;
+}
+
+.button-container {
+    margin-bottom: 10%;
+}

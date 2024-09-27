@@ -14,6 +14,11 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from .forms import SolicitarCitaForm, AsignarTratamientoForm
+from django.contrib.auth import get_user_model
+from django.urls import reverse
+from django.core.mail import send_mail
+from django.conf import settings
+import secrets
 
 
 def registro(request):
@@ -122,40 +127,141 @@ def registro(request):
     else:
         return render(request, 'registro.html')
 
+User = get_user_model()
 
 def inicio_sesion(request):
     if request.method == 'POST':
-        correo_electronico = request.POST['correo_electronico']
-        contrasena = request.POST['contrasena']
-        
-        # Identificador único para los intentos basados en el correo electrónico
-        cache_key = f'login_attempts_{correo_electronico}'
-        max_attempts = 3
-        attempts = cache.get(cache_key, 0)
+        # Verificar si estamos en la etapa de 2FA
+        if 'token' in request.POST:
+            # Etapa 2: Verificación del token de 2FA
+            user_id = request.session.get('pre_2fa_user_id')
+            if not user_id:
+                messages.error(request, 'No se encontró una sesión de 2FA. Por favor, inicia sesión de nuevo.')
+                return redirect('inicio_sesion')
 
-        if attempts >= max_attempts:
-            messages.error(request, 'Cuenta bloqueada temporalmente debido a múltiples intentos fallidos. Intenta de nuevo más tarde.')
-            return render(request, 'inicio_sesion.html')
+            try:
+                user = User.objects.get(pk=user_id)
+            except User.DoesNotExist:
+                messages.error(request, 'Usuario no encontrado.')
+                return redirect('inicio_sesion')
 
-        # Autenticar al usuario
-        user = authenticate(request, username=correo_electronico, password=contrasena)
-        
-        if user is not None:
-            login(request, user)
-            # Resetea el contador de intentos fallidos
-            cache.delete(cache_key)
-            return redirect('portal_usuario')
+            token_entered = request.POST.get('token')
+            token_expected = cache.get(f'2fa_token_{user.pk}')
+
+            # Obtener intentos de 2FA
+            two_fa_key = f'2fa_attempts_{user.pk}'
+            two_fa_attempts = cache.get(two_fa_key, 0)
+            max_two_fa_attempts = 5
+
+            if two_fa_attempts >= max_two_fa_attempts:
+                messages.error(request, 'Has excedido el número máximo de intentos. Intenta de nuevo más tarde.')
+                return redirect('inicio_sesion')
+
+            if token_expected and token_entered == token_expected:
+                # 2FA exitoso, iniciar sesión al usuario
+                login(request, user)
+                # Limpiar el token y la sesión de pre-2FA
+                cache.delete(f'2fa_token_{user.pk}')
+                cache.delete(two_fa_key)
+                del request.session['pre_2fa_user_id']
+                messages.success(request, 'Inicio de sesión exitoso.')
+                return redirect('portal_usuario')  # Redirigir al portal del usuario
+            else:
+                two_fa_attempts += 1
+                cache.set(two_fa_key, two_fa_attempts, timeout=600)  # Bloquear por 10 minutos
+                messages.error(request, 'Código de verificación inválido o expirado.')
+
         else:
-            # Incrementa el contador de intentos fallidos
-            attempts += 1
-            cache.set(cache_key, attempts, timeout=300)  # Bloquea la cuenta durante 5 minutos si hay 3 intentos fallidos
+            # Etapa 1: Autenticación inicial
+            correo_electronico = request.POST.get('correo_electronico')
+            contrasena = request.POST.get('contrasena')
+
+            # Identificador único para los intentos basados en el correo electrónico
+            cache_key = f'login_attempts_{correo_electronico}'
+            max_attempts = 3
+            attempts = cache.get(cache_key, 0)
+
             if attempts >= max_attempts:
                 messages.error(request, 'Cuenta bloqueada temporalmente debido a múltiples intentos fallidos. Intenta de nuevo más tarde.')
+                return render(request, 'inicio_sesion.html')
+
+            # Autenticar al usuario
+            user = authenticate(request, username=correo_electronico, password=contrasena)
+
+            if user is not None:
+                # Resetea el contador de intentos fallidos
+                cache.delete(cache_key)
+
+                # Generar un token de 2FA
+                token = str(secrets.randbelow(1000000)).zfill(6)  # Código de 6 dígitos con ceros a la izquierda
+
+                # Almacenar el token en caché con un tiempo de expiración (por ejemplo, 10 minutos)
+                cache.set(f'2fa_token_{user.pk}', token, timeout=600)
+
+                # Enviar el token por correo electrónico
+                try:
+                    send_mail(
+                        'Código de Verificación de 2FA',
+                        f'Tu código de verificación de dos factores es: {token}',
+                        settings.DEFAULT_FROM_EMAIL,
+                        [user.email],
+                        fail_silently=False,
+                    )
+                except Exception as e:
+                    messages.error(request, 'Error al enviar el correo electrónico. Intenta de nuevo.')
+                    return render(request, 'inicio_sesion.html')
+
+                # Almacenar el ID del usuario en la sesión para el proceso de 2FA
+                request.session['pre_2fa_user_id'] = user.pk
+
+                # Indicar que el token ha sido enviado para activar el modal
+                messages.info(request, 'Se ha enviado un código de verificación a tu correo electrónico.')
             else:
-                messages.error(request, 'Correo electrónico o contraseña incorrectos')
+                # Incrementar el contador de intentos fallidos
+                attempts += 1
+                cache.set(cache_key, attempts, timeout=300)  # Bloquear la cuenta durante 5 minutos si hay 3 intentos fallidos
+                if attempts >= max_attempts:
+                    messages.error(request, 'Cuenta bloqueada temporalmente debido a múltiples intentos fallidos. Intenta de nuevo más tarde.')
+                else:
+                    messages.error(request, 'Correo electrónico o contraseña incorrectos.')
 
-    return render(request, 'inicio_sesion.html')
+    # Determinar si mostrar el modal de 2FA
+    show_2fa = False
+    if 'pre_2fa_user_id' in request.session:
+        show_2fa = True
 
+    return render(request, 'inicio_sesion.html', {'show_2fa': show_2fa})
+
+def resend_2fa_token(request):
+    user_id = request.session.get('pre_2fa_user_id')
+    if not user_id:
+        messages.error(request, 'No se encontró una sesión de 2FA. Por favor, inicia sesión de nuevo.')
+        return redirect('inicio_sesion')
+
+    try:
+        user = User.objects.get(pk=user_id)
+    except User.DoesNotExist:
+        messages.error(request, 'Usuario no encontrado.')
+        return redirect('inicio_sesion')
+
+    # Generar un nuevo token
+    token = str(secrets.randbelow(1000000)).zfill(6)
+    cache.set(f'2fa_token_{user.pk}', token, timeout=600)
+
+    # Enviar el nuevo token por correo electrónico
+    try:
+        send_mail(
+            'Código de Verificación de 2FA',
+            f'Tu nuevo código de verificación de dos factores es: {token}',
+            settings.DEFAULT_FROM_EMAIL,
+            [user.email],
+            fail_silently=False,
+        )
+        messages.success(request, 'Se ha enviado un nuevo código de verificación a tu correo electrónico.')
+    except Exception as e:
+        messages.error(request, 'Error al enviar el correo electrónico. Intenta de nuevo.')
+
+    return redirect('inicio_sesion')
 
 def index(request):
     return render(request, 'index.html')

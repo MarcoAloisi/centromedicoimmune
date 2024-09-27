@@ -6,3 +6,4 @@ django_cryptography
 gunicorn
 psycopg2
 whitenoise
+django-csp

@@ -143,3 +143,28 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CRYPTOGRAPHY_KEY = config('CRYPTOGRAPHY_KEY')
 
+# Security settings
+SESSION_COOKIE_SECURE = True  # Ensures cookies are only sent over HTTPS
+SESSION_COOKIE_HTTPONLY = True  # Prevents JavaScript from accessing the session cookie
+X_FRAME_OPTIONS = 'DENY'  # Prevents your site from being loaded in an iframe
+
+
+# Set session timeout to 3 minutes (180 seconds)
+SESSION_COOKIE_AGE = 180  # 3 minutes
+
+# Expire session at browser close
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+# Save session after every request
+SESSION_SAVE_EVERY_REQUEST = True
+
+
+
+# Email Configuration
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  # For Gmail. Change if using another provider.
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')  # Your email address
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')  # Your email password or app-specific password
+DEFAULT_FROM_EMAIL = 'Centro Medico Inmune <noreply@yourapp.com>'

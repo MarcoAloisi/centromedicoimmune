@@ -3,233 +3,235 @@
 <html lang="en">
 
 <head>
-   <meta charset="utf-8">
-   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-   
-   <meta name="viewport" content="width=device-width, initial-scale=1">
-   <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
-   <link rel="icon" href="../static/images/logo_inmune.png" type="image/x-icon">
-   
-   <title>Centro Médico INMUNE</title>
-   <meta name="keywords" content="">
-   <meta name="description" content="">
-   <meta name="author" content="">
-   
-   <!-- CSS Files -->
-   <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-   <link rel="stylesheet" href="{% static 'css/style.css' %}">
-   <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
-   <link rel="icon" href="{% static 'images/fevicon.png' %}" type="image/gif" />
-   <link rel="stylesheet" href="{% static 'css/jquery.mCustomScrollbar.min.css' %}">
-   <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}">
-   <link rel="stylesheet" href="{% static 'css/owl.theme.default.min.css' %}">
-   <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
-   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css" media="screen">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+
+    <link rel="icon" href="{% static 'images/logo_inmune.png' %}" type="image/x-icon">
+
+    <title>Centro Médico INMUNE</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/responsive.css' %}">
+    <link rel="icon" href="{% static 'images/fevicon.png' %}" type="image/gif" />
+    <link rel="stylesheet" href="{% static 'css/jquery.mCustomScrollbar.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/owl.theme.default.min.css' %}">
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css" media="screen">
+    <!-- Link to your custom CSS file -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 
 <body>
-   <div class="header_section">
-      <nav class="navbar navbar-expand-lg navbar-light bg-light">
-         <div class="logo">
-            <a href="index.html"><img src="{% static 'images/logo_inmune.png' %}" style="width:15%"></a>
-         </div>
-         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-             <span class="navbar-toggler-icon"></span>
-         </button>
-         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-               <li class="nav-item active">
-                  <a class="nav-link" href="index.html">Inicio</a>
-               </li>
-               <li class="nav-item">
-                  <a class="nav-link" href="#contacto_footer">Contacto</a>
-               </li>
-               <li class="nav-item">
-                  <a class="nav-link" href="{% url 'inicio_sesion' %}">Área paciente</a>
-               </li>
-            </ul>
-         </div>
-      </nav>
+    <div class="header_section">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="logo">
+                <a href="index.html"><img src="{% static 'images/logo_inmune.png' %}" class="logo-img"></a>
+            </div>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="index.html">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contacto_footer">Contacto</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'inicio_sesion' %}">Área paciente</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
 
-      <div id="main_slider" class="carousel slide" data-ride="carousel">
-         <div class="carousel-inner">
-            <div class="carousel-item active">
-               <div class="banner_section">
-                  <div class="container">
-                     <div class="row">
-                        <div class="col-md-6">
-                           <h1 class="banner_taital">Centro Médico <br><span style="color: #151515;">INMUNE</span></h1>
-                           <p class="banner_text">Tú centro médico de confianza. Por y para ti.</p>
-                           <div class="btn_main">
-                              <div class="more_bt"><a href="{% url 'inicio_sesion' %}">Pedir Cita</a></div>
-                              <div class="contact_bt"><a href="#contacto_footer">Contacto</a></div>
-                           </div>
+        <div id="main_slider" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="banner_section">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h1 class="banner_taital">Centro Médico <br><span>INMUNE</span></h1>
+                                    <p class="banner_text">Tú centro médico de confianza. Por y para ti.</p>
+                                    <div class="btn_main">
+                                        <div class="more_bt"><a href="{% url 'inicio_sesion' %}">Pedir Cita</a></div>
+                                        <div class="contact_bt"><a href="#contacto_footer">Contacto</a></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="image_1"><img src="{% static 'images/img-1.png' %}" class="image"></div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-md-6">
-                           <div class="image_1"><img src="{% static 'images/img-1.png' %}"></div>
+                    </div>
+                </div>
+                <!-- Additional carousel items can be added here -->
+            </div>
+        </div>
+    </div>
+
+    <div class="health_section layout_padding">
+        <div class="container">
+            <h1 class="health_taital">La mejor atención médica para ti</h1>
+            <p class="health_text">En Centro Médico INMUNE tenemos algo muy claro: nuestra prioridad, los clientes. Comprometidos con la salud estamos aquí para ayudarte en lo que necesites.</p>
+            <div class="health_section layout_padding">
+                <div class="row">
+                    <div class="col-sm-7">
+                        <div class="image_main">
+                            <div class="main">
+                                <img src="{% static 'images/img-2.png' %}" alt="Avatar" class="image">
+                            </div>
                         </div>
-                     </div>
-                  </div>
-               </div>
+                    </div>
+                    <div class="col-sm-5">
+                        <div class="image_main_1">
+                            <div class="main">
+                                <img src="{% static 'images/img-3.png' %}" alt="Avatar" class="image">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="getquote_bt_1"><a href="{% url 'inicio_sesion' %}">Pedir Cita <span><img src="{% static 'images/right-arrow.png' %}"></span></a></div>
             </div>
-            <!-- Additional carousel items can be added here -->
-         </div>
-      </div>
-   </div>
+        </div>
+    </div>
 
-   <div class="health_section layout_padding">
-      <div class="container">
-         <h1 class="health_taital">La mejor atención médica para ti</h1>
-         <p class="health_text">En Centro Médico INMUNE tenemos algo muy claro: nuestra prioridad, los clientes. Comprometidos con la salud estamos aquí para ayudarte en lo que necesites.</p>
-         <div class="health_section layout_padding">
+    <div class="knowledge_section layout_padding">
+        <div class="container">
+            <div class="knowledge_main">
+                <div class="left_main">
+                    <h1 class="knowledge_taital">Nuestro Equipo</h1>
+                    <p class="knowledge_text">Centro Médico INMUNE consta con un gran equipo de médicos y enfermeros que te cuidarán siempre que lo necesites. Especializados en cada área y puestos en lo último en tecnología, siempre aplicarán los tratamientos más recientes para ti.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="news_section layout_padding">
+        <div class="container">
+            <h1 class="health_taital">24h de Atención Médica</h1>
+            <p class="health_text">Si no puedes asistir al centro, iremos a tu casa</p>
+            <div class="news_section_2 layout_padding">
+                <div class="row">
+                    <div class="col-lg-4 col-sm-6">
+                        <div class="box_main">
+                            <div class="icon_1"><img src="{% static 'images/icon-2.png' %}"></div>
+                            <h2 class="centered-text">Médicos altamente capacitados</h2>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-sm-6">
+                        <div class="box_main active">
+                            <div class="icon_1"><img src="{% static 'images/icon-3.png' %}"></div>
+                            <h2 class="centered-text-black">Disponibilidad 24/7 los 365 días del año</h2>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-sm-6">
+                        <div class="box_main">
+                            <div class="icon_1"><img src="{% static 'images/icon-4.png' %}"></div>
+                            <h2 class="centered-text">Adaptados a personas con movilidad reducida</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="getquote_bt"><a href="{% url 'inicio_sesion' %}">Pedir Cita <span><img src="{% static 'images/right-arrow.png' %}"></span></a></div>
+        </div>
+    </div>
+
+    <div class="contact_section layout_padding">
+        <div class="container">
+            <h1 class="contact_taital">Qué hacemos</h1>
+            <div class="news_section_2">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="icon_main">
+                            <div class="icon_7"><img src="{% static 'images/icon-7.png' %}"></div>
+                            <h4 class="diabetes_text">Consulta medicina general y especializaciones</h4>
+                        </div>
+                        <div class="icon_main">
+                            <div class="icon_7"><img src="{% static 'images/icon-5.png' %}"></div>
+                            <h4 class="diabetes_text">Mejores tratamientos para nuestros pacientes</h4>
+                        </div>
+                        <div class="icon_main">
+                            <div class="icon_7"><img src="{% static 'images/icon-6.png' %}"></div>
+                            <h4 class="diabetes_text">Cirugía y tratamientos de última generación</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="client_section layout_padding">
+        <div id="my_slider" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="container">
+                        <h1 class="client_taital">Nuestro CEO</h1>
+                        <div class="client_section_2">
+                            <div class="client_left">
+                                <div><img src="{% static 'images/doctor_francisco_centro_inmune.png' %}" class="client_img"></div>
+                            </div>
+                            <div class="client_right">
+                                <h3 class="distracted_text">Dr. FRANCISCO DE LA ROSA</h3>
+                                <p class="lorem_text">Como médico especializado en inmunología y medicina integrativa, he dedicado más de 20 años a ayudar a las personas a fortalecer su sistema inmunológico y alcanzar un bienestar integral. Mi enfoque combina lo mejor de la ciencia y la tecnología con una atención personalizada y cercana.<br><br>En INMUNE creemos que la salud va más allá de tratar síntomas; se trata de prevenir, equilibrar y cuidar cada aspecto de tu bienestar. Junto a un equipo de profesionales comprometidos, trabajamos para ofrecerte tratamientos innovadores y un acompañamiento integral, diseñado para que te sientas apoyado en cada paso hacia una vida más saludable y plena.</p>
+                                <div class="quote_icon"><img src="{% static 'images/quote-icon.png' %}"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer_section layout_padding" id="contacto_footer">
+        <div class="container">
             <div class="row">
-               <div class="col-sm-7">
-                  <div class="image_main">
-                     <div class="main">
-                        <img src="{% static 'images/img-2.png' %}" alt="Avatar" class="image" style="width:100%">
-                     </div>
-                  </div>
-               </div>
-               <div class="col-sm-5">
-                  <div class="image_main_1">
-                     <div class="main">
-                        <img src="{% static 'images/img-3.png' %}" alt="Avatar" class="image" style="width:100%">
-                     </div>
-                  </div>
-               </div>
+                <div class="col-lg-4 col-sm-4">
+                    <div class="footer_logo">
+                        <a href="index.html"><img src="{% static 'images/logo_inmune.png' %}" class="footer-logo"></a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-sm-4">
+                    <h1 class="adderss_text">Contacta con nosotros</h1>
+                    <div class="map_icon"><img src="{% static 'images/map-icon.png' %}"><span class="paddlin_left_0">Pº de la Castellana, 89. Madrid</span></div>
+                    <div class="map_icon"><img src="{% static 'images/call-icon.png' %}"><span class="paddlin_left_0">91 321 45 76</span></div>
+                    <div class="map_icon"><img src="{% static 'images/mail-icon.png' %}"><span class="paddlin_left_0">info@cminmune.com</span></div>
+                </div>
+                <div class="col-lg-4 col-sm-4">
+                    <h1 class="adderss_text">Doctores</h1>
+                    <div class="hiphop_text_1">Hay muchos centros médicos buenos en nuestro país, pero te aseguro que como nosotros, ninguno. Estamos encantados de tratarte</div>
+                </div>
             </div>
-            <div class="getquote_bt_1"><a href="{% url 'inicio_sesion' %}">Pedir Cita <span><img src="{% static 'images/right-arrow.png' %}"></span></a></div>
-         </div>
-      </div>
-   </div>
+        </div>
+    </div>
 
-   <div class="knowledge_section layout_padding">
-      <div class="container">
-         <div class="knowledge_main">
-            <div class="left_main">
-               <h1 class="knowledge_taital">Nuestro Equipo</h1>
-               <p class="knowledge_text">Centro Médico INMUNE consta con un gran equipo de médicos y enfermeros que te cuidarán siempre que lo necesites. Especializados en cada área y puestos en lo último en tecnología, siempre aplicarán los tratamientos más recientes para ti.</p>
-            </div>
-         </div>
-      </div>
-   </div>
+    <div class="copyright_section">
+        <div class="container">
+            <p class="copyright_text">2024 © Todos los derechos reservados. Diseñado por  J.A, A.Y, C.R, M.A y A.V</a></p>
+        </div>
+    </div>
 
-   <div class="news_section layout_padding">
-      <div class="container">
-         <h1 class="health_taital">24h de Atención Médica</h1>
-         <p class="health_text">Si no puedes asistir al centro, iremos a tu casa</p>
-         <div class="news_section_2 layout_padding">
-            <div class="row">
-               <div class="col-lg-4 col-sm-6">
-                  <div class="box_main">
-                     <div class="icon_1"><img src="{% static 'images/icon-2.png' %}"></div>
-                     <h2 style="text-align:center;color: white;">Médicos altamente capacitados</h4>
-                  </div>
-               </div>
-               <div class="col-lg-4 col-sm-6">
-                  <div class="box_main active">
-                     <div class="icon_1"><img src="{% static 'images/icon-3.png' %}"></div>
-                     <h2 style="text-align:center;color: black;">Disponibilidad 24/7 los 365 días del año</h4>
-                  </div>
-               </div>
-               <div class="col-lg-4 col-sm-6">
-                  <div class="box_main">
-                     <div class="icon_1"><img src="{% static 'images/icon-4.png' %}"></div>
-                     <h2 style="text-align:center;color: white;">Adaptados a personas con movilidad reducida</h4>
-                  </div>
-               </div>
-            </div>
-         </div>
-         <div class="getquote_bt"><a href="{% url 'inicio_sesion' %}">Pedir Cita <span><img src="{% static 'images/right-arrow.png' %}"></span></a></div>
-      </div>
-   </div>
-
-   <div class="contact_section layout_padding">
-      <div class="container">
-         <h1 class="contact_taital">Qué hacemos</h1>
-         <div class="news_section_2">
-            <div class="row">
-               <div class="col-md-12">
-                  <div class="icon_main">
-                     <div class="icon_7"><img src="{% static 'images/icon-7.png' %}"></div>
-                     <h4 class="diabetes_text">Consulta medicina general y especializaciones</h4>
-                  </div>
-                  <div class="icon_main">
-                     <div class="icon_7"><img src="{% static 'images/icon-5.png' %}"></div>
-                     <h4 class="diabetes_text">Mejores tratamientos para nuestros pacientes</h4>
-                  </div>
-                  <div class="icon_main">
-                     <div class="icon_7"><img src="{% static 'images/icon-6.png' %}"></div>
-                     <h4 class="diabetes_text">Cirugía y tratamientos de última generación</h4>
-                  </div>
-               </div>
-            </div>
-         </div>
-      </div>
-   </div>
-
-   <div class="client_section layout_padding">
-      <div id="my_slider" class="carousel slide" data-ride="carousel">
-         <div class="carousel-inner">
-            <div class="carousel-item active">
-               <div class="container">
-                  <h1 class="client_taital">Nuestro CEO</h1>
-                  <div class="client_section_2">
-                     <div class="client_left">
-                        <div><img src="../static/images/doctor_francisco_centro_inmune.png" class="client_img"></div>
-                     </div>
-                     <div class="client_right">
-                        <h3 class="distracted_text">Dr. FRANCISCO DE LA ROSA</h3>
-                        <p class="lorem_text">Como médico especializado en inmunología y medicina integrativa, he dedicado más de 20 años a ayudar a las personas a fortalecer su sistema inmunológico y alcanzar un bienestar integral. Mi enfoque combina lo mejor de la ciencia y la tecnología con una atención personalizada y cercana.<br><br>En INMUNE creemos que la salud va más allá de tratar síntomas; se trata de prevenir, equilibrar y cuidar cada aspecto de tu bienestar. Junto a un equipo de profesionales comprometidos, trabajamos para ofrecerte tratamientos innovadores y un acompañamiento integral, diseñado para que te sientas apoyado en cada paso hacia una vida más saludable y plena.</p>
-                        <div class="quote_icon"><img src="{% static 'images/quote-icon.png' %}"></div>
-                     </div>
-                  </div>
-               </div>
-            </div>
-         </div>
-      </div>
-   </div>
-
-   <div class="footer_section layout_padding" id="contacto_footer">
-      <div class="container">
-         <div class="row">
-            <div class="col-lg-4 col-sm-4">
-               <div class="footer_logo">
-                  <a href="index.html"><img src="{% static 'images/logo_inmune.png' %}" style="width:60%"></a>
-               </div>
-            </div>
-            <div class="col-lg-4 col-sm-4">
-               <h1 class="adderss_text">Contacta con nosotros</h1>
-               <div class="map_icon"><img src="{% static 'images/map-icon.png' %}"><span class="paddlin_left_0">Pº de la Castellana, 89. Madrid</span></div>
-               <div class="map_icon"><img src="{% static 'images/call-icon.png' %}"><span class="paddlin_left_0">91 321 45 76</span></div>
-               <div class="map_icon"><img src="{% static 'images/mail-icon.png' %}"><span class="paddlin_left_0">info@cminmune.com</span></div>
-            </div>
-            <div class="col-lg-4 col-sm-4">
-               <h1 class="adderss_text">Doctores</h1>
-               <div class="hiphop_text_1">Hay muchos centros médicos buenos en nuestro país, pero te aseguro que como nosotros, ninguno. Estamos encantados de tratarte</div>
-            </div>
-         </div>
-      </div>
-   </div>
-
-   <div class="copyright_section">
-      <div class="container">
-         <p class="copyright_text">2024 © Todos los derechos reservados. Diseñado por  J.A, A.Y, C.R, M.A y A.V</a></p>
-      </div>
-   </div>
-
-   <!-- JavaScript Files -->
-   <script src="{% static 'js/jquery.min.js' %}"></script>
-   <script src="{% static 'js/popper.min.js' %}"></script>
-   <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
-   <script src="{% static 'js/jquery-3.0.0.min.js' %}"></script>
-   <script src="{% static 'js/plugin.js' %}"></script>
-   <script src="{% static 'js/jquery.mCustomScrollbar.concat.min.js' %}"></script>
-   <script src="{% static 'js/custom.js' %}"></script>
-   <script src="{% static 'js/owl.carousel.js' %}"></script>
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js"></script>
+    <!-- JavaScript Files -->
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/popper.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/jquery-3.0.0.min.js' %}"></script>
+    <script src="{% static 'js/plugin.js' %}"></script>
+    <script src="{% static 'js/jquery.mCustomScrollbar.concat.min.js' %}"></script>
+    <script src="{% static 'js/custom.js' %}"></script>
+    <script src="{% static 'js/owl.carousel.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js"></script>
 </body>
 
 </html>

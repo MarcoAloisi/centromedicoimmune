@@ -977,3 +977,52 @@ input.Enter_text::placeholder {
 .margin_90 {
     margin: 90px 0px;
 }
+
+/* static/css/styles.css */
+
+/* Logo width */
+.logo img {
+    width: 15%;
+}
+
+/* Banner title color */
+.banner_taital span {
+    color: #151515;
+}
+
+/* Image full width */
+.image {
+    width: 100%;
+}
+
+/* Centered text with specific color */
+.centered-text {
+    text-align: center;
+    color: white;
+}
+
+.centered-text-black {
+    text-align: center;
+    color: black;
+}
+
+/* Example for logo */
+.logo-img {
+    width: 15%;
+}
+
+/* Example for the header logo in the footer */
+.footer-logo {
+    width: 60%;
+}
+
+/* Example for centered text */
+.centered-text {
+    text-align: center;
+    color: white;
+}
+
+.centered-text-black {
+    text-align: center;
+    color: black;
+}
