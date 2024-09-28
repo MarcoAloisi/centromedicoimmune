@@ -14,13 +14,21 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+# centromedico/urls.py
+
 from django.contrib import admin
 from django.urls import path
-from centroimmune.views import index, registro  # Correctly reference the views module
-
+from centroimmune import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', index, name='index'),  # Map the root URL to the index view
-    path('registro/', registro, name='registro'),
+    path('', views.index, name='index'),
+    path('registro/', views.registro, name='registro'),
+    path('inicio_sesion/', views.inicio_sesion, name='inicio_sesion'),
+    path('resend-2fa-token/', views.resend_2fa_token, name='resend_2fa_token'),
+    path('portal/', views.portal_usuario, name='portal_usuario'),
+    path('solicitar_cita/', views.solicitar_cita, name='solicitar_cita'),
+    path('modificar_cita/<int:cita_id>/', views.modificar_cita, name='modificar_cita'),
+    path('asignar_tratamiento/<int:cita_id>/', views.asignar_tratamiento, name='asignar_tratamiento'),
+    path('cancelar_cita/<int:cita_id>/', views.cancelar_cita, name='cancelar_cita'),
+    # ... otras rutas ...
 ]

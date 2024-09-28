@@ -9,9 +9,10 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-
+import os
 from pathlib import Path
 from decouple import config
+import dj_database_url
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -24,13 +25,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config('SECRET_KEY')
 FERNET_KEY = config('FERNET_KEY')
-
+FIELD_ENCRYPTION_KEY = config('ENCRYPTED_MODEL_FIELDS_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['centromedicoimmune.onrender.com', 'localhost', '127.0.0.1']
 
 # Application definition
 
@@ -56,6 +56,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
 ]
 
 ROOT_URLCONF = 'centromedico.urls'
@@ -85,17 +87,9 @@ AUTH_USER_MODEL = 'centroimmune.User'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('DATABASE_NAME'),
-        'USER': config('DATABASE_USER'),
-        'PASSWORD': config('DATABASE_PASSWORD'),
-        'HOST': config('DATABASE_HOST', default='localhost'),
-        'PORT': config('DATABASE_PORT', default='5432'),
-        'OPTIONS': {
-            'sslmode': 'prefer',
-        },
-    }
+    'default': dj_database_url.config(
+        default=config('DATABASE_URL')
+    )
 }
 
 # Password validation
@@ -107,6 +101,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS': {
+            'min_length': 8,
+        }
     },
     {
         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
@@ -117,14 +114,16 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es-es'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Madrid'  # Change this to your desired timezone
 
 USE_I18N = True
+USE_L10N = True
 
 USE_TZ = True
 
@@ -132,8 +131,14 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+if not DEBUG:
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+else:
+    STATICFILES_DIRS = [BASE_DIR / 'centroimmune' / 'static']
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
@@ -141,7 +146,31 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CRYPTOGRAPHY_KEY = config('CRYPTOGRAPHY_KEY')
 
-# CONFIGURACION DE SEGURIDAD
+# Security settings
+SESSION_COOKIE_SECURE = True  # Ensures cookies are only sent over HTTPS
+SESSION_COOKIE_HTTPONLY = True  # Prevents JavaScript from accessing the session cookie
+X_FRAME_OPTIONS = 'DENY'  # Prevents your site from being loaded in an iframe
+
+
+# Set session timeout to 3 minutes (180 seconds)
+SESSION_COOKIE_AGE = 180  # 3 minutes
+
+# Expire session at browser close
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+
+# Save session after every request
+SESSION_SAVE_EVERY_REQUEST = True
+
+
+
+# Email Configuration
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  # For Gmail. Change if using another provider.
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')  # Your email address
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')  # Your email password or app-specific password
+DEFAULT_FROM_EMAIL = 'Centro Medico Inmune <noreply@yourapp.com>'# CONFIGURACION DE SEGURIDAD
 
 # Usar HTTPS (TLS/SSL)
 # https://docs.djangoproject.com/en/stable/ref/middleware/#module-django.middleware.security

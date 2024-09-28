@@ -1,0 +1,33 @@
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 5%;
+    margin-right: 10%;
+    margin-left: 10%;
+}
+
+.top-page {
+    align-items: center;
+    justify-content: center;
+}
+
+.logo-small {
+    width: 10%;
+}
+
+.header-title {
+    margin-left: 10%;
+}
+
+.centered-form {
+    text-align: center; /* Avoid -webkit-center */
+}
+
+.input-group {
+    margin-top: 4%;
+    margin-bottom: 2%;
+}
+
+.button-container {
+    margin-bottom: 10%;
+}

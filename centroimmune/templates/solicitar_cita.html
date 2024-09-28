@@ -1,0 +1,54 @@
+<!-- centroimmune/templates/solicitar_cita.html -->
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Solicitar Nueva Cita</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container my-5">
+        <h2>Solicitar Nueva Cita</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                {{ form.fecha.label_tag }}
+                {{ form.fecha }}
+                {% if form.fecha.errors %}
+                    <div class="text-danger">{{ form.fecha.errors }}</div>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.tratamiento.label_tag }}
+                {{ form.tratamiento }}
+                {% if form.tratamiento.errors %}
+                    <div class="text-danger">{{ form.tratamiento.errors }}</div>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.personal_medico.label_tag }}
+                {{ form.personal_medico }}
+                {% if form.personal_medico.errors %}
+                    <div class="text-danger">{{ form.personal_medico.errors }}</div>
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {{ form.motivo.label_tag }}
+                {{ form.motivo }}
+                {% if form.motivo.errors %}
+                    <div class="text-danger">{{ form.motivo.errors }}</div>
+                {% endif %}
+            </div>
+            <button type="submit" class="btn btn-primary">Solicitar Cita</button>
+            <a href="{% url 'portal_paciente' %}" class="btn btn-secondary">Cancelar</a>
+        </form>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

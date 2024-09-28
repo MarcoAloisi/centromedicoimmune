@@ -3,29 +3,83 @@ from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.core.validators import RegexValidator, ValidationError
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
-from fernet_fields import EncryptedTextField
+from django.contrib.auth.base_user import BaseUserManager
+from encrypted_model_fields.fields import EncryptedCharField, EncryptedTextField
 from django.utils import timezone
 import re
 
 # Validadores
-phone_regex = RegexValidator(
-    regex=r'^\+?34?\d{9}$',  # Formato español: +34 seguido de 9 dígitos
-    message=_("El número de teléfono debe estar en el formato: '+34912345678'. Total de 9 dígitos.")
-)
-
-def validate_dni(value):
-    dni_regex = re.compile(r'^\d{8}[A-Z]$')
-    if not dni_regex.match(value):
-        raise ValidationError(_('El DNI debe tener 8 números seguidos de una letra mayúscula.'))
-    # Validar la letra del DNI
+def validate_dni_nie(value):
+    value = value.upper()
+    dni_nie_regex = re.compile(r'^([XYZ]\d{7}[A-Z]|\d{8}[A-Z])$')
+    
+    if not dni_nie_regex.match(value):
+        raise ValidationError(_('El DNI o NIE debe tener 8 números seguidos de una letra mayúscula para DNI, o una letra inicial (X, Y, Z) seguida de 7 números y una letra mayúscula para NIE.'))
+    
+    # Convertir NIE a un número similar al formato de DNI
+    if value[0] == 'X':
+        value_num = '0' + value[1:]
+    elif value[0] == 'Y':
+        value_num = '1' + value[1:]
+    elif value[0] == 'Z':
+        value_num = '2' + value[1:]
+    else:
+        value_num = value  # Es un DNI
+    
+    # Letras de control para los DNIs/NIEs
     letras = "TRWAGMYFPDXBNJZSQVHLCKE"
-    numero = int(value[:8])
-    letra = value[8]
-    if letras[numero % 23] != letra:
-        raise ValidationError(_('La letra del DNI no es válida.'))
+    numero = int(value_num[:-1])  # Tomar los dígitos del número
+    letra_correcta = letras[numero % 23]
+    
+    if letra_correcta != value_num[-1]:
+        raise ValidationError(_('La letra del DNI o NIE no es válida.'))
 
+def validate_phone(value):
+    phone_regex = re.compile(r'^\d{9}$')
+    if not phone_regex.match(value):
+        raise ValidationError(_('El número de teléfono debe tener 9 dígitos.'))
+
+
+class UserManager(BaseUserManager):
+    def create_user(self, correo_electronico, password=None, **extra_fields):
+        """
+        Crea y guarda un usuario con el correo electrónico y la contraseña proporcionados.
+        """
+        if not correo_electronico:
+            raise ValueError('El correo electrónico debe ser proporcionado')
+        correo_electronico = self.normalize_email(correo_electronico)
+        user = self.model(correo_electronico=correo_electronico, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, correo_electronico, password=None, **extra_fields):
+        """
+        Crea y guarda un superusuario con el correo electrónico y la contraseña proporcionados.
+        """
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault('rol', 'admin')  # Asegúrate de que 'admin' sea un rol válido
+
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError('El superusuario debe tener is_staff=True.')
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError('El superusuario debe tener is_superuser=True.')
+        if extra_fields.get('rol') != 'admin':
+            raise ValueError('El superusuario debe tener rol de admin.')
+
+        return self.create_user(correo_electronico, password, **extra_fields)
+    
 # Modelo de Usuario Personalizado para Manejar Diferentes Tipos de Usuarios
 class User(AbstractUser):
+    # Eliminar el campo 'username'
+    username = None
+
+    correo_electronico = models.EmailField(unique=True)
+
+    USERNAME_FIELD = 'correo_electronico'
+    REQUIRED_FIELDS = []
+
     class Roles(models.TextChoices):
         ADMIN = 'admin', _('Administrador')
         MEDICO = 'medico', _('Personal Médico')
@@ -33,7 +87,7 @@ class User(AbstractUser):
 
     rol = models.CharField(max_length=10, choices=Roles.choices)
 
-    # Añadir related_name personalizado para evitar conflictos
+    # Relación con grupos y permisos personalizados
     groups = models.ManyToManyField(
         Group,
         related_name='custom_user_groups',
@@ -49,8 +103,10 @@ class User(AbstractUser):
         verbose_name=_('permisos de usuario'),
     )
 
+    objects = UserManager()
+
     def __str__(self):
-        return f"{self.username} ({self.get_rol_display()})"
+        return f"{self.correo_electronico} ({self.get_rol_display()})"
 
 # Modelo para Certificaciones (normalizado)
 class Certificacion(models.Model):
@@ -67,7 +123,7 @@ class Certificacion(models.Model):
 # Modelo para Pacientes
 class Paciente(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='paciente_profile')
-    dni = models.CharField(max_length=9, unique=True, validators=[validate_dni])
+    dni = models.CharField(max_length=9, unique=True, validators=[validate_dni_nie])
     nombre = models.CharField(max_length=50)
     apellidos = models.CharField(max_length=50)
     fecha_nacimiento = models.DateField()
@@ -76,10 +132,10 @@ class Paciente(models.Model):
         choices=[('M', 'Masculino'), ('F', 'Femenino'), ('O', 'Otro')]
     )
     direccion = models.CharField(max_length=255)
-    telefono = models.CharField(validators=[phone_regex], max_length=17)
+    telefono = models.CharField(validators=[validate_phone], max_length=17)
     correo_electronico = models.EmailField(unique=True)
     historial_medico = EncryptedTextField(blank=True, null=True)
-    informacion_seguro = EncryptedTextField(max_length=255, blank=True, null=True)
+    informacion_seguro = EncryptedCharField(max_length=255, blank=True, null=True)
     fecha_registro = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -92,7 +148,7 @@ class Paciente(models.Model):
 # Modelo para Personal Médico
 class PersonalMedico(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='medico_profile')
-    dni = models.CharField(max_length=9, unique=True, validators=[validate_dni])
+    dni = models.CharField(max_length=9, unique=True, validators=[validate_dni_nie])
     nombre = models.CharField(max_length=50)
     apellidos = models.CharField(max_length=50)
     rol = models.CharField(max_length=50, choices=[
@@ -102,7 +158,7 @@ class PersonalMedico(models.Model):
         # Agrega más roles según sea necesario
     ])
     especializacion = models.CharField(max_length=100, blank=True, null=True)
-    telefono = models.CharField(validators=[phone_regex], max_length=17)
+    telefono = models.CharField(validators=[validate_phone], max_length=17)
     correo_electronico = models.EmailField(unique=True)
     fecha_contratacion = models.DateField(null=True, blank=True)
     licencia = models.CharField(max_length=100, blank=True, null=True)
@@ -115,24 +171,12 @@ class PersonalMedico(models.Model):
         verbose_name = "Personal Médico"
         verbose_name_plural = "Personal Médico"
 
-# Modelo para Categorías de Tratamientos
-class CategoriaTratamiento(models.Model):
-    nombre = models.CharField(max_length=100, unique=True)
-
-    def __str__(self):
-        return self.nombre
-
-    class Meta:
-        verbose_name = "Categoría de Tratamiento"
-        verbose_name_plural = "Categorías de Tratamientos"
 
 # Modelo para Tratamientos
 class Tratamiento(models.Model):
     nombre = models.CharField(max_length=100)
-    descripcion = models.TextField()
+    descripcion = models.TextField(blank=True, null=True)
     costo = models.DecimalField(max_digits=10, decimal_places=2)
-    categoria = models.ForeignKey(CategoriaTratamiento, on_delete=models.SET_NULL, null=True, blank=True, related_name='tratamientos')
-    duracion = models.DurationField(null=True, blank=True)
 
     def __str__(self):
         return self.nombre
@@ -140,8 +184,6 @@ class Tratamiento(models.Model):
     def clean(self):
         if self.costo <= 0:
             raise ValidationError({'costo': 'El costo debe ser un valor positivo.'})
-        if self.duracion and self.duracion.total_seconds() <= 0:
-            raise ValidationError({'duracion': 'La duración debe ser un valor positivo.'})
 
     def save(self, *args, **kwargs):
         self.full_clean()
@@ -163,7 +205,7 @@ class Cita(models.Model):
     paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE, related_name='citas')
     personal_medico = models.ForeignKey(PersonalMedico, on_delete=models.CASCADE, related_name='citas')
     fecha = models.DateTimeField()
-    tratamiento = models.ForeignKey(Tratamiento, on_delete=models.SET_NULL, null=True, related_name='citas')
+    tratamiento = models.ForeignKey(Tratamiento, on_delete=models.SET_NULL, null=True,blank=True, related_name='citas')
     estado = models.CharField(max_length=20, choices=EstadosCita.choices, default=EstadosCita.PROGRAMADA)
     motivo = models.CharField(max_length=255, blank=True, null=True)
     creado_en = models.DateTimeField(auto_now_add=True)

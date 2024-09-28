@@ -1,5 +1,8 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.utils.translation import gettext_lazy as _
+from .models import User
+
 from .models import (
     User,
     Paciente,
@@ -9,17 +12,43 @@ from .models import (
     ConsentimientoInformado,
     Factura,
     Certificacion,
-    CategoriaTratamiento
 )
 
 # Registro del Modelo Personalizado de Usuario
 class UserAdmin(BaseUserAdmin):
-    fieldsets = BaseUserAdmin.fieldsets + (
-        (None, {'fields': ('rol',)}),
-    )
-    list_display = ('username', 'email', 'first_name', 'last_name', 'rol', 'is_staff')
+    list_display = ('correo_electronico', 'get_nombre', 'get_apellidos', 'rol', 'is_staff')
     list_filter = ('rol', 'is_staff', 'is_superuser', 'is_active')
-    search_fields = ('username', 'email', 'first_name', 'last_name')
+    fieldsets = (
+        (None, {'fields': ('correo_electronico', 'password')}),
+        (_('Permisos'), {'fields': ('rol', 'is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
+        (_('Fechas importantes'), {'fields': ('last_login', 'date_joined')}),
+    )
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('correo_electronico', 'rol', 'password1', 'password2'),
+        }),
+    )
+    search_fields = ('correo_electronico',)
+    ordering = ('correo_electronico',)
+    filter_horizontal = ('groups', 'user_permissions',)
+
+    def get_nombre(self, obj):
+        if obj.rol == 'paciente' and hasattr(obj, 'paciente_profile'):
+            return obj.paciente_profile.nombre
+        elif obj.rol == 'medico' and hasattr(obj, 'medico_profile'):
+            return obj.medico_profile.nombre
+        return '-'
+
+    def get_apellidos(self, obj):
+        if obj.rol == 'paciente' and hasattr(obj, 'paciente_profile'):
+            return obj.paciente_profile.apellidos
+        elif obj.rol == 'medico' and hasattr(obj, 'medico_profile'):
+            return obj.medico_profile.apellidos
+        return '-'
+
+    get_nombre.short_description = 'Nombre'
+    get_apellidos.short_description = 'Apellidos'
 
 admin.site.register(User, UserAdmin)
 
@@ -29,11 +58,6 @@ class CertificacionAdmin(admin.ModelAdmin):
     list_display = ('nombre', 'descripcion')
     search_fields = ('nombre',)
 
-# Registro de Categorías de Tratamiento
-@admin.register(CategoriaTratamiento)
-class CategoriaTratamientoAdmin(admin.ModelAdmin):
-    list_display = ('nombre',)
-    search_fields = ('nombre',)
 
 # Registro de Pacientes
 @admin.register(Paciente)
@@ -53,9 +77,23 @@ class PersonalMedicoAdmin(admin.ModelAdmin):
 # Registro de Tratamientos
 @admin.register(Tratamiento)
 class TratamientoAdmin(admin.ModelAdmin):
-    list_display = ('nombre', 'categoria', 'costo', 'duracion')
-    search_fields = ('nombre', 'categoria__nombre')
-    list_filter = ('categoria',)
+    list_display = ('nombre', 'descripcion', 'costo')  # Muestra las columnas en la lista
+    search_fields = ('nombre',)  # Permite buscar por nombre
+    list_filter = ('costo',)  # Agrega un filtro por costo
+    ordering = ('nombre',)  # Ordena la lista por nombre ascendente
+    list_editable = ('costo',)  # Permite editar el costo directamente desde la lista
+    fieldsets = (
+        (None, {
+            'fields': ('nombre', 'descripcion', 'costo')
+        }),
+    )  # Organiza los campos en el formulario de edición
+
+    def descripcion_corta(self, obj):
+        return obj.descripcion[:50] + "..." if len(obj.descripcion) > 50 else obj.descripcion
+
+    descripcion_corta.short_description = 'Descripción Corta'
+
+    list_display_links = ('nombre',)  # Hace que solo el nombre sea un enlace para editar
 
 # Registro de Citas
 @admin.register(Cita)

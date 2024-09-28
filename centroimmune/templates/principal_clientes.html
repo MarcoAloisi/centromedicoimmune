@@ -1,0 +1,293 @@
+{% load static %}
+{% load tz %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{% static 'images/logo_inmune.png' %}" type="image/x-icon">
+    <title>Portal de Usuario</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="logo">
+           <a href="{% url 'portal_usuario' %}"><img src="{% static 'images/logo_inmune.png' %}" style="width:10%" alt="Logo Inmune"></a>
+        </div>
+        <div>
+            <h3>Portal de Usuario</h3>
+        </div>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+           <ul class="navbar-nav mr-auto">
+              <li class="nav-item">
+                 <a class="nav-link" href="{% url 'index' %}">Cerrar sesión</a>
+              </li>
+           </ul>
+        </div>
+     </nav>
+
+    <!-- Mensajes de Éxito/Error -->
+    <div class="container my-3">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Cerrar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <!-- Contenedor Principal -->
+    <div class="container my-5">
+        {% if rol == 'paciente' %}
+            <!-- Sección para Pacientes -->
+
+            <!-- Tarjeta de Datos Personales -->
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-info text-white">
+                    <h5 class="card-title">Datos Personales</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text"><strong>Nombre: </strong>{{ paciente.nombre }}</p>
+                    <p class="card-text"><strong>Apellidos: </strong>{{ paciente.apellidos }}</p>
+                    <p class="card-text"><strong>DNI: </strong>{{ paciente.dni }}</p>
+                    <p class="card-text"><strong>Fecha de nacimiento: </strong>{{ paciente.fecha_nacimiento|date:"d-m-Y" }}</p>
+                    <p class="card-text"><strong>Género: </strong>{{ paciente.get_genero_display }}</p>
+                    <p class="card-text"><strong>Dirección: </strong>{{ paciente.direccion }}</p>
+                    <p class="card-text"><strong>Teléfono: </strong>{{ paciente.telefono }}</p>
+                    <p class="card-text"><strong>Correo Electrónico: </strong>{{ paciente.correo_electronico }}</p>
+                </div>
+                <div class="card-footer text-right">
+                    <a href="#" class="btn btn-info" data-toggle="modal" data-target="#modificarDatosModal">Modificar Datos</a>
+                </div>
+            </div>
+
+            <!-- Modal para Modificar Datos del Paciente -->
+            <div class="modal fade" id="modificarDatosModal" tabindex="-1" aria-labelledby="modificarDatosLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form method="post" action="{% url 'portal_usuario' %}">
+                            {% csrf_token %}
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modificarDatosLabel">Modificar Datos Personales</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                {{ form_modificar_datos.as_p }}
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" name="modificar_datos" class="btn btn-primary">Guardar Cambios</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Tarjeta de Próximas Citas -->
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title">Próximas Citas</h5>
+                </div>
+                <div class="card-body">
+                    {% if citas %}
+                        <div class="row">
+                            {% for cita, form_modificar in citas_modificar_forms %}
+                                <div class="col-md-4">
+                                    <div class="card mb-4 shadow-sm">
+                                        <!-- Asignar color según el estado de la cita -->
+                                        {% if cita.estado == 'Programada' %}
+                                            <div class="card-header bg-primary text-white">
+                                        {% elif cita.estado == 'Completada' %}
+                                            <div class="card-header bg-success text-white">
+                                        {% elif cita.estado == 'Cancelada' %}
+                                            <div class="card-header bg-danger text-white">
+                                        {% elif cita.estado == 'No Show' %}
+                                            <div class="card-header bg-warning text-white">
+                                        {% else %}
+                                            <div class="card-header bg-secondary text-white">
+                                        {% endif %}
+                                            <h5 class="card-title">
+                                                {% if cita.tratamiento %}
+                                                    {{ cita.tratamiento.nombre }}
+                                                {% else %}
+                                                    Sin Tratamiento Asignado
+                                                {% endif %}
+                                            </h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <p class="card-text"><strong>Fecha: </strong>{{ cita.fecha_formateada }}</p>
+                                            <p class="card-text"><strong>Hora: </strong>{{ cita.fecha|localtime|time:"H:i" }}</p>                                           
+                                            <p class="card-text"><strong>Médico: </strong>{{ cita.personal_medico.nombre }} {{ cita.personal_medico.apellidos }}</p>
+                                            <p class="card-text"><strong>Estado: </strong>{{ cita.get_estado_display }}</p>
+                                            <p class="card-text"><strong>Motivo Cita: </strong>{{ cita.motivo }}</p>
+                                            {% if cita.tratamiento %}
+                                                <p class="card-text"><strong>Tratamiento: </strong>{{ cita.tratamiento.descripcion }}</p>
+                                                <p class="card-text"><strong>Precio: </strong>{{ cita.tratamiento.costo }} €</p>
+                                            {% endif %}
+                                        </div>
+                                        <div class="card-footer">
+                                            <!-- Enlace para modificar la cita -->
+                                            <a href="#" class="btn btn-primary btn-block" data-toggle="modal" data-target="#modificarCitaModal{{ cita.id }}">Modificar cita</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Modal para Modificar Cita (Paciente) -->
+                                <div class="modal fade" id="modificarCitaModal{{ cita.id }}" tabindex="-1" aria-labelledby="modificarCitaLabel{{ cita.id }}" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <form method="post" action="{% url 'modificar_cita' cita.id %}">
+                                                {% csrf_token %}
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="modificarCitaLabel{{ cita.id }}">Modificar Cita</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    {{ form_modificar.as_p }}
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <a href="{% url 'cancelar_cita' cita.id %}" class="btn btn-danger">Cancelar Cita</a>
+                                                    <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                                </div>                                                
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-center">No tienes ninguna cita pendiente</p>
+                    {% endif %}
+                </div>
+                <div class="card-footer text-right">
+                    <!-- Botón para abrir el modal de Nueva Cita -->
+                    <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#nuevaCitaModal">Solicitar Nueva Cita</a>
+                </div>
+            </div>
+
+            <!-- Modal para Solicitar Nueva Cita (Paciente) -->
+            <div class="modal fade" id="nuevaCitaModal" tabindex="-1" aria-labelledby="nuevaCitaLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form method="post" action="{% url 'solicitar_cita' %}">
+                            {% csrf_token %}
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="nuevaCitaLabel">Solicitar Nueva Cita</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                {{ form_nueva_cita.as_p }}
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Solicitar Cita</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        {% elif rol == 'medico' %}
+            <!-- Sección para Médicos -->
+            
+            <!-- Información del Médico -->
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-info text-white">
+                    <h5 class="card-title">Información del Médico</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text"><strong>Nombre: </strong>{{ medico.nombre }}</p>
+                    <p class="card-text"><strong>Apellidos: </strong>{{ medico.apellidos }}</p>
+                    <p class="card-text"><strong>Especialidad: </strong>{{ medico.especialidad }}</p>
+                    <p class="card-text"><strong>Correo Electrónico: </strong>{{ medico.correo_electronico }}</p>
+                    <p class="card-text"><strong>Teléfono: </strong>{{ medico.telefono }}</p>
+                </div>
+            </div>
+    
+            <!-- Tarjeta de Todas las Citas del Médico -->
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-info text-white">
+                    <h5 class="card-title">Todas las Citas</h5>
+                </div>
+                <div class="card-body">
+                    {% if citas %}
+                        <div class="row">
+                            {% for cita, form_asignar_tratamiento in asignar_tratamiento_forms %}
+                                <div class="col-md-4">
+                                    <div class="card mb-4 shadow-sm">
+                                        <div class="card-header bg-primary text-white">
+                                            <h5 class="card-title">
+                                                {% if cita.tratamiento %}
+                                                    {{ cita.tratamiento.nombre }}
+                                                {% else %}
+                                                    Sin Tratamiento Asignado
+                                                {% endif %}
+                                            </h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <p class="card-text"><strong>Fecha: </strong>{{ cita.fecha_formateada }}</p>
+                                            <p class="card-text"><strong>Hora: </strong>{{ cita.fecha|localtime|time:"H:i" }}</p> 
+                                            <p class="card-text"><strong>Paciente: </strong>{{ cita.paciente.nombre }} {{ cita.paciente.apellidos }}</p>
+                                            <p class="card-text"><strong>Estado: </strong>{{ cita.get_estado_display }}</p>
+                                            <p class="card-text"><strong>Motivo cita: </strong>{{ cita.motivo }}</p>
+                                            {% if not cita.tratamiento %}
+                                                <!-- Mostrar botón para asignar tratamiento -->
+                                                <button type="button" class="btn btn-success btn-block" data-toggle="modal" data-target="#asignarTratamientoModal{{ cita.id }}">Asignar Tratamiento</button>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Modal para Asignar Tratamiento (Médico) -->
+                                <div class="modal fade" id="asignarTratamientoModal{{ cita.id }}" tabindex="-1" aria-labelledby="asignarTratamientoLabel{{ cita.id }}" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <form method="post" action="{% url 'asignar_tratamiento' cita.id %}">
+                                                {% csrf_token %}
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="asignarTratamientoLabel{{ cita.id }}">Asignar Tratamiento</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    {{ form_asignar_tratamiento.as_p }}
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="submit" class="btn btn-primary">Guardar</button>
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-center">No tienes citas programadas.</p>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+    
+    <!-- Bootstrap JS y dependencias -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
