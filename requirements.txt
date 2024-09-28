@@ -7,3 +7,7 @@ gunicorn
 psycopg2
 whitenoise
 django-csp
+django_extensions
+Werkzeug
+pyOpenSSL
+#python manage.py runserver_plus --cert-file dev.cert --key-file dev.key

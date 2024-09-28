@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django_cryptography',
     'django_extensions',
     'centroimmune',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -58,6 +59,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.locale.LocaleMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'centromedico.urls'
@@ -178,3 +180,17 @@ SECURE_SSL_REDIRECT = True
 SECURE_HSTS_SECONDS = 60
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
+
+# Protege contra clickjacking
+X_FRAME_OPTIONS = 'DENY'
+
+# Protección contra ataques XSS
+SECURE_BROWSER_XSS_FILTER = True
+
+#Esto es solo en entorno de preproducción
+CORS_ALLOW_ALL_ORIGINS = True
+
+#Aquí hay que meter las URL de las API que usemos
+CORS_ALLOWED_ORIGINS = [
+
+]
