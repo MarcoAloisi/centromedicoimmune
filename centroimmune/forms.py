@@ -1,14 +1,20 @@
 # forms.py
 
 from django import forms
-from .models import Cita, Tratamiento, PersonalMedico
+from .models import Cita, Tratamiento, PersonalMedico, Paciente
 from django.utils import timezone
 from django.core.exceptions import ValidationError
 
 class SolicitarCitaForm(forms.ModelForm):
     fecha = forms.DateTimeField(
-        widget=forms.DateTimeInput(attrs={'type': 'datetime-local', 'min': timezone.now().isoformat()}),
-        label='Fecha y Hora'
+        widget=forms.DateTimeInput(
+            attrs={
+                'type': 'datetime-local',
+                'min': timezone.now().strftime('%Y-%m-%dT%H:%M')
+            }
+        ),
+        label='Fecha y Hora',
+        input_formats=['%Y-%m-%dT%H:%M']  # Ensure proper input parsing
     )
     personal_medico = forms.ModelChoiceField(
         queryset=PersonalMedico.objects.all(),
@@ -66,3 +72,15 @@ class AsignarTratamientoForm(forms.ModelForm):
         if costo <= 0:
             raise forms.ValidationError('El costo debe ser un valor positivo.')
         return costo
+
+class ModificarDatosPacienteForm(forms.ModelForm):
+    class Meta:
+        model = Paciente
+        fields = ['nombre', 'direccion', 'telefono', 'genero', 'historial_medico', 'informacion_seguro']
+        widgets = {
+            'direccion': forms.TextInput(attrs={'class': 'form-control'}),
+            'telefono': forms.TextInput(attrs={'class': 'form-control'}),
+            'genero': forms.Select(attrs={'class': 'form-control'}),
+            'historial_medico': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'informacion_seguro': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+        }

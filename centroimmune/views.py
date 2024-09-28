@@ -19,6 +19,9 @@ from django.urls import reverse
 from django.core.mail import send_mail
 from django.conf import settings
 import secrets
+from django.utils.timezone import localtime
+import locale
+from .forms import ModificarDatosPacienteForm
 
 
 def registro(request):
@@ -273,6 +276,8 @@ def is_medico(user):
 def is_paciente(user):
     return user.rol == 'paciente'
 
+locale.setlocale(locale.LC_TIME, 'es_ES.UTF-8')
+
 @login_required
 def portal_usuario(request):
     user = request.user
@@ -289,6 +294,23 @@ def portal_usuario(request):
             fecha__gte=timezone.now()
         ).select_related('tratamiento', 'personal_medico').order_by('fecha')
 
+
+        # Convertir la fecha de la cita a la zona horaria local y formatear
+        for cita in citas:
+            cita.fecha_formateada = localtime(cita.fecha).strftime('%d de %B de %Y')
+
+                # Formulario para modificar datos del paciente
+        if request.method == 'POST' and 'modificar_datos' in request.POST:
+            form_modificar_datos = ModificarDatosPacienteForm(request.POST, instance=paciente)
+            if form_modificar_datos.is_valid():
+                form_modificar_datos.save()
+                messages.success(request, 'Tus datos personales han sido modificados exitosamente.')
+                return redirect('portal_usuario')
+            else:
+                messages.error(request, 'Hubo un error al modificar tus datos.')
+        else:
+            form_modificar_datos = ModificarDatosPacienteForm(instance=paciente)
+
         # Inicializar el formulario para solicitar nueva cita
         form_nueva_cita = SolicitarCitaForm()
 
@@ -303,6 +325,7 @@ def portal_usuario(request):
             'citas': citas,
             'form_nueva_cita': form_nueva_cita,
             'citas_modificar_forms': citas_modificar_forms,
+            'form_modificar_datos': form_modificar_datos,
             'rol': 'paciente',
         }
 
@@ -317,6 +340,9 @@ def portal_usuario(request):
             personal_medico=medico,
             fecha__gte=timezone.now()
         ).select_related('tratamiento', 'paciente').order_by('fecha')
+        
+        for cita in citas:
+            cita.fecha_formateada = localtime(cita.fecha).strftime('%d de %B de %Y')
 
         # Crear una lista de tuplas (cita, formulario_asignar_tratamiento)
         asignar_tratamiento_forms = []
