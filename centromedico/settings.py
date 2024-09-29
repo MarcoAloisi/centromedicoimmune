@@ -153,6 +153,7 @@ SESSION_COOKIE_SECURE = True  # Ensures cookies are only sent over HTTPS
 SESSION_COOKIE_HTTPONLY = True  # Prevents JavaScript from accessing the session cookie
 X_FRAME_OPTIONS = 'DENY'  # Prevents your site from being loaded in an iframe
 CSRF_COOKIE_SECURE = True  # Ensures CSRF cookie is only sent over HTTPS
+CSRF_COOKIE_HTTPONLY = True  # <-- Add this line
 
 # Set session timeout to 10 min
 SESSION_COOKIE_AGE = 600  # 10 minutes
