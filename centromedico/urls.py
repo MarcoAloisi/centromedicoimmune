@@ -22,6 +22,7 @@ from centroimmune import views
 
 urlpatterns = [
     path('', views.index, name='index'),
+    path('admin/', admin.site.urls),
     path('registro/', views.registro, name='registro'),
     path('inicio_sesion/', views.inicio_sesion, name='inicio_sesion'),
     path('resend-2fa-token/', views.resend_2fa_token, name='resend_2fa_token'),
