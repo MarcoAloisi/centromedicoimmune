@@ -22,6 +22,9 @@ import secrets
 from django.utils.timezone import localtime
 import locale
 from .forms import ModificarDatosPacienteForm
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from datetime import timedelta
 
 
 def registro(request):
@@ -132,6 +135,7 @@ def registro(request):
 
 User = get_user_model()
 
+
 def inicio_sesion(request):
     if request.method == 'POST':
         # Verificar si estamos en la etapa de 2FA
@@ -167,6 +171,11 @@ def inicio_sesion(request):
                 cache.delete(f'2fa_token_{user.pk}')
                 cache.delete(two_fa_key)
                 del request.session['pre_2fa_user_id']
+
+                # Guardar tiempo de la verificación exitosa
+                request.session['2fa_verified'] = True
+                request.session['2fa_verified_at'] = timezone.now().strftime('%Y-%m-%d %H:%M:%S')
+
                 messages.success(request, 'Inicio de sesión exitoso.')
                 return redirect('portal_usuario')  # Redirigir al portal del usuario
             else:
@@ -192,6 +201,15 @@ def inicio_sesion(request):
             user = authenticate(request, username=correo_electronico, password=contrasena)
 
             if user is not None:
+                # Revisar si el usuario ya pasó 2FA en los últimos 10 minutos
+                last_verified_at = request.session.get('2fa_verified_at')
+                if last_verified_at:
+                    last_verified_time = datetime.strptime(last_verified_at, '%Y-%m-%d %H:%M:%S')
+                    if timezone.now() - timedelta(minutes=10) < last_verified_time:
+                        login(request, user)
+                        messages.success(request, 'Inicio de sesión exitoso.')
+                        return redirect('portal_usuario')
+
                 # Resetea el contador de intentos fallidos
                 cache.delete(cache_key)
 
@@ -201,15 +219,19 @@ def inicio_sesion(request):
                 # Almacenar el token en caché con un tiempo de expiración (por ejemplo, 10 minutos)
                 cache.set(f'2fa_token_{user.pk}', token, timeout=600)
 
-                # Enviar el token por correo electrónico
+                # Enviar el token por correo electrónico usando una plantilla HTML
                 try:
-                    send_mail(
-                        'Código de Verificación de 2FA',
-                        f'Tu código de verificación de dos factores es: {token}',
-                        settings.DEFAULT_FROM_EMAIL,
-                        [user.email],
-                        fail_silently=False,
+                    html_content = render_to_string('emails/2fa_email.html', {'token': token})
+                    text_content = f'Tu código de verificación de dos factores es: {token}\n\nSi no solicitaste este código, ignora este correo electrónico.'
+                    
+                    msg = EmailMultiAlternatives(
+                        subject='Código de Verificación de 2FA',
+                        body=text_content,
+                        from_email=settings.DEFAULT_FROM_EMAIL,
+                        to=[user.email]
                     )
+                    msg.attach_alternative(html_content, "text/html")
+                    msg.send()
                 except Exception as e:
                     messages.error(request, 'Error al enviar el correo electrónico. Intenta de nuevo.')
                     return render(request, 'inicio_sesion.html')
