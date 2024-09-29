@@ -163,6 +163,7 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 # Save session after every request
 SESSION_SAVE_EVERY_REQUEST = True
 
+SECURE_REFERRER_POLICY = 'same-origin'
 
 
 # Email Configuration using Gmail
