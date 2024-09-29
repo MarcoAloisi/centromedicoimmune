@@ -1,5 +1,3 @@
-# forms.py
-
 from django import forms
 from .models import Cita, Tratamiento, PersonalMedico, Paciente
 from django.utils import timezone
@@ -14,7 +12,7 @@ class SolicitarCitaForm(forms.ModelForm):
             }
         ),
         label='Fecha y Hora',
-        input_formats=['%Y-%m-%dT%H:%M']  # Ensure proper input parsing
+        input_formats=['%Y-%m-%dT%H:%M']
     )
     personal_medico = forms.ModelChoiceField(
         queryset=PersonalMedico.objects.all(),

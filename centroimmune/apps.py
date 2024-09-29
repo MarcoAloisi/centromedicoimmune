@@ -7,5 +7,5 @@ class CentroimmuneConfig(AppConfig):
 
     
     def ready(self):
-        import centroimmune.signals  # Reemplaza 'tu_app' con el nombre de tu aplicación
+        import centroimmune.signals
 

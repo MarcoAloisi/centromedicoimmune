@@ -24,11 +24,11 @@ def validate_dni_nie(value):
     elif value[0] == 'Z':
         value_num = '2' + value[1:]
     else:
-        value_num = value  # Es un DNI
+        value_num = value
     
     # Letras de control para los DNIs/NIEs
     letras = "TRWAGMYFPDXBNJZSQVHLCKE"
-    numero = int(value_num[:-1])  # Tomar los dígitos del número
+    numero = int(value_num[:-1])
     letra_correcta = letras[numero % 23]
     
     if letra_correcta != value_num[-1]:
@@ -59,7 +59,7 @@ class UserManager(BaseUserManager):
         """
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
-        extra_fields.setdefault('rol', 'admin')  # Asegúrate de que 'admin' sea un rol válido
+        extra_fields.setdefault('rol', 'admin')
 
         if extra_fields.get('is_staff') is not True:
             raise ValueError('El superusuario debe tener is_staff=True.')
@@ -72,7 +72,6 @@ class UserManager(BaseUserManager):
     
 # Modelo de Usuario Personalizado para Manejar Diferentes Tipos de Usuarios
 class User(AbstractUser):
-    # Eliminar el campo 'username'
     username = None
 
     correo_electronico = models.EmailField(unique=True)
@@ -155,7 +154,6 @@ class PersonalMedico(models.Model):
         ('Doctor', 'Doctor'),
         ('Enfermero', 'Enfermero'),
         ('Tecnico', 'Técnico'),
-        # Agrega más roles según sea necesario
     ])
     especializacion = models.CharField(max_length=100, blank=True, null=True)
     telefono = models.CharField(validators=[validate_phone], max_length=17)

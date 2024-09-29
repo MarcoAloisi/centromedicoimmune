@@ -51,7 +51,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'csp.middleware.CSPMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',  # Serve static files efficiently
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -60,10 +60,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'corsheaders.middleware.CorsMiddleware',
-    'centroimmune.middlewares.CSPNonceMiddleware',  # Add this line
+    'centroimmune.middlewares.CSPNonceMiddleware',
 ]
-
-
 
 ROOT_URLCONF = 'centromedico.urls'
 
@@ -154,47 +152,26 @@ CRYPTOGRAPHY_KEY = config('CRYPTOGRAPHY_KEY')
 
 # Content Security Policy (CSP)
 CSP_DEFAULT_SRC = ("'self'",)  # Only allow resources from the same origin
-
-# More restrictive script policy (remove 'unsafe-inline')
 CSP_SCRIPT_SRC = ("'self'", "https://cdnjs.cloudflare.com", "https://cdn.jsdelivr.net", "https://leostop.com","'strict-dynamic'")
-
-# Allow styles from self and Google Fonts (limit 'unsafe-inline' use)
 CSP_STYLE_SRC = ("'self'", "https://fonts.googleapis.com", "'unsafe-inline'")
-
-# Restrict object-src to none for security
 CSP_OBJECT_SRC = ("'none'",)
-
-# Prevent base tag injections
 CSP_BASE_URI = ("'self'",)
-
-# Font sources (restrict data: URIs if not required)
 CSP_FONT_SRC = ("'self'", "https://fonts.gstatic.com", "data:")
-
-# Image sources (restrict data: URIs if not needed)
 CSP_IMG_SRC = ("'self'", "data:")
-
-# Allow only self for AJAX and WebSocket connections
 CSP_CONNECT_SRC = ("'self'",)
 
-from django.utils.crypto import get_random_string
-
 # Security settings
-SESSION_COOKIE_SECURE = True  # Ensures cookies are only sent over HTTPS
-SESSION_COOKIE_HTTPONLY = True  # Prevents JavaScript from accessing the session cookie
-X_FRAME_OPTIONS = 'DENY'  # Prevents your site from being loaded in an iframe
-CSRF_COOKIE_SECURE = True  # Ensures CSRF cookie is only sent over HTTPS
-CSRF_COOKIE_HTTPONLY = True  # <-- Add this line
+SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_HTTPONLY = True 
+X_FRAME_OPTIONS = 'DENY'
+CSRF_COOKIE_SECURE = True 
+CSRF_COOKIE_HTTPONLY = True
+SECURE_REFERRER_POLICY = 'same-origin'
 
 # Set session timeout to 10 min
-SESSION_COOKIE_AGE = 600  # 10 minutes
-
-# Expire session at browser close
+SESSION_COOKIE_AGE = 600 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-
-# Save session after every request
 SESSION_SAVE_EVERY_REQUEST = True
-
-SECURE_REFERRER_POLICY = 'same-origin'
 
 
 # Email Configuration using Gmail
@@ -203,7 +180,7 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = config('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')  # Your Gmail app password (or regular password)
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = 'Centro Medico Inmune <urboventures@gmail.com>'
 
 # Usar HTTPS (TLS/SSL)

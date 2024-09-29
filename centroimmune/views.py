@@ -178,10 +178,10 @@ def inicio_sesion(request):
                 request.session['2fa_verified_at'] = timezone.now().strftime('%Y-%m-%d %H:%M:%S')
 
                 messages.success(request, 'Inicio de sesión exitoso.')
-                return redirect('portal_usuario')  # Redirigir al portal del usuario
+                return redirect('portal_usuario')
             else:
                 two_fa_attempts += 1
-                cache.set(two_fa_key, two_fa_attempts, timeout=600)  # Bloquear por 10 minutos
+                cache.set(two_fa_key, two_fa_attempts, timeout=600)
                 messages.error(request, 'Código de verificación inválido o expirado.')
 
         else:
@@ -252,7 +252,7 @@ def inicio_sesion(request):
             else:
                 # Incrementar el contador de intentos fallidos
                 attempts += 1
-                cache.set(cache_key, attempts, timeout=300)  # Bloquear la cuenta durante 5 minutos si hay 3 intentos fallidos
+                cache.set(cache_key, attempts, timeout=300)
                 if attempts >= max_attempts:
                     messages.error(request, 'Cuenta bloqueada temporalmente debido a múltiples intentos fallidos. Intenta de nuevo más tarde.')
                 else:
@@ -344,7 +344,7 @@ def portal_usuario(request):
         # Inicializar el formulario para solicitar nueva cita
         form_nueva_cita = SolicitarCitaForm()
 
-        # Crear una lista de tuplas (cita, formulario_modificar)
+        # Crear una lista de tuplas
         citas_modificar_forms = []
         for cita in citas:
             form_modificar = SolicitarCitaForm(instance=cita)
@@ -374,7 +374,7 @@ def portal_usuario(request):
         for cita in citas:
             cita.fecha_formateada = localtime(cita.fecha).strftime('%d de %B de %Y')
 
-        # Crear una lista de tuplas (cita, formulario_asignar_tratamiento)
+        # Crear una lista de tuplas
         asignar_tratamiento_forms = []
         for cita in citas:
             # Crear formulario para asignar tratamiento

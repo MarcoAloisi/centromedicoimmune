@@ -6,10 +6,7 @@ class CSPNonceMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        # Generate a random nonce for each request
         request.nonce = base64.b64encode(os.urandom(16)).decode('utf-8')
-        
-        # Call the next middleware or view
         response = self.get_response(request)
         
         # Add the CSP header with the generated nonce
