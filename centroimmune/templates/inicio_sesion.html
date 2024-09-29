@@ -111,14 +111,13 @@
     <script src="{% static 'js/jquery.fancybox.min.js' %}"></script>
 
     <!-- Inicializar el Modal si show_2fa es True -->
-    <script>
-        $(document).ready(function () {
-            var show2FA = {{ show_2fa|yesno:"true,false" }};
-            if (show2FA) {
-                $('#twoFactorModal').modal('show');
-            }
-        });
-    </script>
+    <p>2FA is {{ show_2fa }}</p>
+
+    <body class="d-flex flex-column min-vh-100" data-show2fa="{{ show_2fa|yesno:'true,false' }}">
+        ...
+        <script src="{% static 'js/twoFactorModal.js' %}"></script>
+    </body>
+
 </body>
 
 </html>

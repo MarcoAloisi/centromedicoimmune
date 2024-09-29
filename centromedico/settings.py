@@ -151,22 +151,29 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CRYPTOGRAPHY_KEY = config('CRYPTOGRAPHY_KEY')
 
 # Content Security Policy (CSP)
-CSP_DEFAULT_SRC = ("'self'",)  # Allow everything from the same origin
+CSP_DEFAULT_SRC = ("'self'",)  # Only allow resources from the same origin
 
-# Allow inline styles and Google Fonts
+# More restrictive script policy (remove 'unsafe-inline')
+CSP_SCRIPT_SRC = ("'self'", "https://cdnjs.cloudflare.com", "https://cdn.jsdelivr.net", "https://leostop.com")
+
+# Allow styles from self and Google Fonts (limit 'unsafe-inline' use)
 CSP_STYLE_SRC = ("'self'", "'unsafe-inline'", "https://fonts.googleapis.com")
 
-# Allow inline scripts and external trusted scripts
-CSP_SCRIPT_SRC = ("'self'", "'unsafe-inline'", "https://cdnjs.cloudflare.com", "https://cdn.jsdelivr.net")  # Allow external CDNs for libraries like Bootstrap and Popper
+# Restrict object-src to none for security
+CSP_OBJECT_SRC = ("'none'",)
 
-# Allow images from self and inline base64 images
-CSP_IMG_SRC = ("'self'", "data:")
+# Prevent base tag injections
+CSP_BASE_URI = ("'self'",)
 
-# Allow fonts from self and Google Fonts
+# Font sources (restrict data: URIs if not required)
 CSP_FONT_SRC = ("'self'", "https://fonts.gstatic.com", "data:")
 
-# Allow AJAX and other connections from the same origin
+# Image sources (restrict data: URIs if not needed)
+CSP_IMG_SRC = ("'self'", "data:")
+
+# Allow only self for AJAX and WebSocket connections
 CSP_CONNECT_SRC = ("'self'",)
+
 
 
 
