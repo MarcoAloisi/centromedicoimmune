@@ -298,8 +298,12 @@ def is_medico(user):
 def is_paciente(user):
     return user.rol == 'paciente'
 
-locale.setlocale(locale.LC_TIME, 'es_ES.UTF-8')
-
+try:
+    locale.setlocale(locale.LC_TIME, 'es_ES.UTF-8')
+except locale.Error:
+    # Fallback to default locale if 'es_ES.UTF-8' is not available
+    locale.setlocale(locale.LC_TIME, 'en_US.UTF-8')
+    
 @login_required
 def portal_usuario(request):
     user = request.user
