@@ -45,6 +45,6 @@
     </div>
 
     <!-- Load Bootstrap 5 Bundle (includes Popper.js) -->
-    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}" nonce="{{ request.nonce }}"></script>
 </body>
 </html>

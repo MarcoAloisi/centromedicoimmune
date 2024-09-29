@@ -25,6 +25,8 @@ from .forms import ModificarDatosPacienteForm
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from datetime import timedelta
+import os
+import base64
 
 
 def registro(request):

@@ -102,20 +102,17 @@
     </footer>
 
     <!-- JavaScript Files -->
-    <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
-    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
-    <script src="{% static 'js/plugin.js' %}"></script>
-    <script src="{% static 'js/jquery.mCustomScrollbar.concat.min.js' %}"></script>
-    <script src="{% static 'js/custom.js' %}"></script>
-    <script src="{% static 'js/owl.carousel.js' %}"></script>
-    <script src="{% static 'js/jquery.fancybox.min.js' %}"></script>
-
-    <!-- Inicializar el Modal si show_2fa es True -->
-    <p>2FA is {{ show_2fa }}</p>
+    <script src="{% static 'js/jquery-3.7.1.min.js' %}" nonce="{{ request.nonce }}"></script>
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}" nonce="{{ request.nonce }}"></script>
+    <script src="{% static 'js/plugin.js' %}" nonce="{{ request.nonce }}"></script>
+    <script src="{% static 'js/jquery.mCustomScrollbar.concat.min.js' %}" nonce="{{ request.nonce }}"></script>
+    <script src="{% static 'js/custom.js' %}" nonce="{{ request.nonce }}"></script>
+    <script src="{% static 'js/owl.carousel.js' %}" nonce="{{ request.nonce }}"></script>
+    <script src="{% static 'js/jquery.fancybox.min.js' %}" nonce="{{ request.nonce }}"></script>
 
     <body class="d-flex flex-column min-vh-100" data-show2fa="{{ show_2fa|yesno:'true,false' }}">
         ...
-        <script src="{% static 'js/twoFactorModal.js' %}"></script>
+        <script src="{% static 'js/twoFactorModal.js' %}" nonce="{{ request.nonce }}"></script>
     </body>
 
 </body>

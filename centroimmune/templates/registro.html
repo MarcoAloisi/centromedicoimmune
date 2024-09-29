@@ -162,14 +162,14 @@
    </div>
 
    <!-- JavaScript Files -->
-   <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
-   <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
-   <script src="{% static 'js/plugin.js' %}"></script>
-   <script src="{% static 'js/jquery.mCustomScrollbar.concat.min.js' %}"></script>
-   <script src="{% static 'js/custom.js' %}"></script>
-   <script src="{% static 'js/owl.carousel.js' %}"></script>
-   <script src="{% static 'js/jquery.fancybox.min.js' %}"></script>
-   <script src="{% static 'js/datepickerInit.js' %}"></script>
+   <script src="{% static 'js/bootstrap.bundle.min.js' %}" nonce="{{ request.nonce }}"></script>
+   <script src="{% static 'js/jquery-3.7.1.min.js' %}" nonce="{{ request.nonce }}"></script>
+   <script src="{% static 'js/plugin.js' %}" nonce="{{ request.nonce }}"></script>
+   <script src="{% static 'js/jquery.mCustomScrollbar.concat.min.js' %}" nonce="{{ request.nonce }}"></script>
+   <script src="{% static 'js/custom.js' %}" nonce="{{ request.nonce }}"></script>
+   <script src="{% static 'js/owl.carousel.js' %}" nonce="{{ request.nonce }}"></script>
+   <script src="{% static 'js/jquery.fancybox.min.js' %}" nonce="{{ request.nonce }}"></script>
+   <script src="{% static 'js/datepickerInit.js' %}" nonce="{{ request.nonce }}"></script>
 
 </body>
 

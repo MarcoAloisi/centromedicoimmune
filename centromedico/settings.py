@@ -60,6 +60,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    'centroimmune.middlewares.CSPNonceMiddleware',  # Add this line
 ]
 
 
@@ -150,14 +151,15 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CRYPTOGRAPHY_KEY = config('CRYPTOGRAPHY_KEY')
 
+
 # Content Security Policy (CSP)
 CSP_DEFAULT_SRC = ("'self'",)  # Only allow resources from the same origin
 
 # More restrictive script policy (remove 'unsafe-inline')
-CSP_SCRIPT_SRC = ("'self'", "https://cdnjs.cloudflare.com", "https://cdn.jsdelivr.net", "https://leostop.com")
+CSP_SCRIPT_SRC = ("'self'", "https://cdnjs.cloudflare.com", "https://cdn.jsdelivr.net", "https://leostop.com","'strict-dynamic'")
 
 # Allow styles from self and Google Fonts (limit 'unsafe-inline' use)
-CSP_STYLE_SRC = ("'self'", "'unsafe-inline'", "https://fonts.googleapis.com")
+CSP_STYLE_SRC = ("'self'", "https://fonts.googleapis.com", "'unsafe-inline'")
 
 # Restrict object-src to none for security
 CSP_OBJECT_SRC = ("'none'",)
@@ -174,9 +176,7 @@ CSP_IMG_SRC = ("'self'", "data:")
 # Allow only self for AJAX and WebSocket connections
 CSP_CONNECT_SRC = ("'self'",)
 
-
-
-
+from django.utils.crypto import get_random_string
 
 # Security settings
 SESSION_COOKIE_SECURE = True  # Ensures cookies are only sent over HTTPS
