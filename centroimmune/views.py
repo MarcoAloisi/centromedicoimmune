@@ -204,7 +204,14 @@ def inicio_sesion(request):
                 # Revisar si el usuario ya pasó 2FA en los últimos 10 minutos
                 last_verified_at = request.session.get('2fa_verified_at')
                 if last_verified_at:
+                    # Convert last_verified_at to a datetime object
                     last_verified_time = datetime.strptime(last_verified_at, '%Y-%m-%d %H:%M:%S')
+
+                    # Ensure last_verified_time is timezone-aware
+                    if timezone.is_naive(last_verified_time):
+                        last_verified_time = timezone.make_aware(last_verified_time)
+
+                    # Compare aware datetimes
                     if timezone.now() - timedelta(minutes=10) < last_verified_time:
                         login(request, user)
                         messages.success(request, 'Inicio de sesión exitoso.')

@@ -5,16 +5,9 @@
 <head>
    <meta charset="utf-8">
    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-   
-   <meta name="viewport" content="width=device-width, initial-scale=1">
-   <meta name="viewport" content="initial-scale=1, maximum-scale=1">
-
-   <link rel="icon" href="../static/images/logo_inmune.png" type="image/x-icon">
-   
+   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+   <link rel="icon" href="{% static 'images/logo_inmune.png' %}" type="image/x-icon">
    <title>Registro Clientes - INMUNE</title>
-   <meta name="keywords" content="">
-   <meta name="description" content="">
-   <meta name="author" content="">
    
    <!-- CSS Files -->
    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
@@ -24,192 +17,165 @@
    <link rel="stylesheet" href="{% static 'css/jquery.mCustomScrollbar.min.css' %}">
    <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}">
    <link rel="stylesheet" href="{% static 'css/owl.theme.default.min.css' %}">
-   <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
-   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css" media="screen">
+   <link rel="stylesheet" href="{% static 'css/fontawesome.css' %}">
+   <link rel="stylesheet" href="{% static 'css/jquery.fancybox.min.css' %}">
 </head>
 
 <body>
-   <div class="top-page row g-3">
-       <img src="{% static 'images/logo_inmune.png' %}" width="10%"/>
-       <h1 style="margin-left: 10%;">Registro de nuevos usuarios</h1>
+   <div class="top-page row g-3 align-items-center">
+       <div class="col-auto">
+           <img src="{% static 'images/logo_inmune.png' %}" width="100" alt="Logo Inmune"/>
+       </div>
+       <div class="col-auto">
+           <h1>Registro de nuevos usuarios</h1>
+       </div>
    </div>
-   
+
    {% if messages %}
        {% for message in messages %}
            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
        {% endfor %}
    {% endif %}
 
-    <form class="row g-2" method="post">
-        {% csrf_token %}
-        <!-- Campo de Nombre -->
-        <div class="col-md-4" style="margin-bottom: 2%;">
-            <label for="inputNombre4" class="form-label">Nombre *</label>
-            <input type="text" class="form-control" id="inputNombre4" name="nombre" required>
-        </div>
-        
-        <!-- Campo de Apellidos -->
-        <div class="col-md-4" style="margin-bottom: 2%;">
-            <label for="inputApellidos4" class="form-label">Apellidos *</label>
-            <input type="text" class="form-control" id="inputApellidos4" name="apellidos" required>
-        </div>
-        
-        <!-- Campo de DNI -->
-        <div class="col-md-4" style="margin-bottom: 2%;">
-            <label for="inputDNI" class="form-label">DNI / NIE *</label>
-            <input type="text" class="form-control" id="inputDNI" name="dni" required>
-        </div>
-    
-        <!-- Selector de Fecha de Nacimiento -->
-        <div class="col-md-4" style="margin-bottom: 2%;">
-            <div class="datepicker-container">
-                <label for="datepicker">Fecha de Nacimiento *</label>
-                <input type="text" class="form-control" id="datepicker" name="fecha_nacimiento" placeholder="Selecciona aquí" required>
-            </div>
-        </div>
-    
-        <!-- Selector de Género -->
-        <div class="col-md-4" style="margin-bottom: 2%;">
-            <div>
-                <label for="inputState" class="form-label">Género *</label>
-            </div>
-            <div>
-                <select id="inputGenero" class="form-select" name="genero" required>
-                    <option value="" disabled selected>Seleccione</option>
-                    <option value="M">Masculino</option>
-                    <option value="F">Femenino</option>
-                    <option value="O">Otro</option>
-                </select>
-            </div>
-        </div>
+   <form class="row g-3" method="post">
+       {% csrf_token %}
+       
+       <!-- Campo de Nombre -->
+       <div class="col-md-4 mb-3">
+           <label for="inputNombre4" class="form-label">Nombre *</label>
+           <input type="text" class="form-control" id="inputNombre4" name="nombre" required>
+       </div>
 
-        <!-- Campo de Nacionalidad -->
-        <div class="col-md-4" style="margin-bottom: 2%;">
-            <div>
-                <label for="inputNacionalidad" class="form-label">Nacionalidad *</label>
-            </div>
-            <div>
-                <select id="inputNacionalidad" class="form-select" name="nacionalidad" required style="max-height: 50px; overflow-y: auto;">
-                    <option value="" disabled selected>Seleccione</option>
-                    <option value="Afganistán">Afganistán</option>
-                    <option value="Alemania">Alemania</option>
-                    <option value="Argentina">Argentina</option>
-                    <option value="Australia">Australia</option>
-                    <option value="Brasil">Brasil</option>
-                    <option value="Canadá">Canadá</option>
-                    <option value="Chile">Chile</option>
-                    <option value="China">China</option>
-                    <option value="Colombia">Colombia</option>
-                    <option value="Cuba">Cuba</option>
-                    <option value="Egipto">Egipto</option>
-                    <option value="España">España</option>
-                    <option value="Estados Unidos">Estados Unidos</option>
-                    <option value="Francia">Francia</option>
-                    <option value="India">India</option>
-                    <option value="Italia">Italia</option>
-                    <option value="Japón">Japón</option>
-                    <option value="México">México</option>
-                    <option value="Reino Unido">Reino Unido</option>
-                    <option value="Rusia">Rusia</option>
-                    <option value="Sudáfrica">Sudáfrica</option>
-                    <option value="Venezuela">Venezuela</option>
-                    <!-- Añade aquí más opciones según sea necesario -->
-                </select>
-            </div>
-        </div>
+       <!-- Campo de Apellidos -->
+       <div class="col-md-4 mb-3">
+           <label for="inputApellidos4" class="form-label">Apellidos *</label>
+           <input type="text" class="form-control" id="inputApellidos4" name="apellidos" required>
+       </div>
 
-        <!-- Campo de Dirección -->
-        <div class="col-12" style="margin-bottom: 2%;">
-            <label for="inputDireccion" class="form-label">Dirección *</label>
-            <input type="text" class="form-control" id="inputDireccion" name="direccion" placeholder="Paseo de la Castellana, 3" required>
-        </div>
-        
-        <!-- Campo de Dirección 2 -->
-        <div class="col-12" style="margin-bottom: 2%;">
-            <label for="inputDireccion2" class="form-label">Dirección 2</label>
-            <input type="text" class="form-control" id="inputDireccion2" name="direccion2" placeholder="Apartamento, escalera, portal, puerta (Opcional)">
-        </div>
-    
-        <!-- Campo de Ciudad -->
-        <div class="col-md-6" style="margin-bottom: 2%;">
-            <label for="inputCiudad" class="form-label">Ciudad *</label>
-            <input type="text" class="form-control" id="inputCiudad" name="ciudad" required>
-        </div>
-    
-        <!-- Campo de Código Postal -->
-        <div class="col-md-2" style="margin-bottom: 2%;">
-            <label for="inputZip" class="form-label">Código Postal *</label>
-            <input type="text" class="form-control" id="inputZip" name="codigo_postal" required>
-        </div>
-    
-        <!-- Campo de Teléfono -->
-        <div class="col-md-2" style="margin-bottom: 2%;">
-            <label for="inputTelefono" class="form-label">Teléfono *</label>
-            <input type="text" class="form-control" id="inputTelefono" name="telefono" required>
-        </div>
-    
-        <!-- Campo de Email -->
-        <div class="col-md-6" style="margin-bottom: 2%;">
-            <label for="inputEmail4" class="form-label">Email *</label>
-            <input type="email" class="form-control" id="inputEmail4" name="correo_electronico" required>
-        </div>
-    
-        <!-- Campo de Contraseña -->
-        <div class="col-md-6" style="margin-bottom: 2%;">
-            <label for="inputPassword4" class="form-label">Contraseña *</label>
-            <input type="password" class="form-control" id="inputPassword4" name="contrasena" required>
-        </div>
+       <!-- Campo de DNI -->
+       <div class="col-md-4 mb-3">
+           <label for="inputDNI" class="form-label">DNI / NIE *</label>
+           <input type="text" class="form-control" id="inputDNI" name="dni" required>
+       </div>
 
-                <!-- Campo de Confirmar Contraseña -->
-        <div class="col-md-6" style="margin-bottom: 2%;">
-            <label for="inputConfirmPassword4" class="form-label">Confirmar Contraseña *</label>
-            <input type="password" class="form-control" id="inputConfirmPassword4" name="confirmar_contrasena" required>
-        </div>
-        
-        <!-- Campo de Historial Médico -->
-        <div class="col-12" style="margin-bottom: 2%;">
-            <label for="inputHistorial" class="form-label">Historial Médico (Opcional)</label>
-            <textarea class="form-control" id="inputHistorial" name="historial_medico" rows="3"></textarea>
-        </div>
-    
-        <!-- Campo de Información de Seguro -->
-        <div class="col-12" style="margin-bottom: 2%;">
-            <label for="inputSeguro" class="form-label">Información del Seguro (Opcional)</label>
-            <textarea class="form-control" id="inputSeguro" name="informacion_seguro" rows="2"></textarea>
-        </div>
-    
-        <!-- CheckBox -->
-        <div class="col-12" style="margin-bottom: 2%;">
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="gridCheck" required>
-                <label class="form-check-label" for="gridCheck">
-                    Acepto los términos y condiciones
-                </label>
-            </div>
-        </div>
-        
-        <!-- Botón de Enviar -->
-        <div class="col-12" style="margin-bottom: 10%;">
-            <button type="submit" class="btn btn-primary">Registrar</button>
-        </div>
-    </form>
+       <!-- Selector de Fecha de Nacimiento -->
+       <div class="col-md-4 mb-3">
+           <label for="datepicker" class="form-label">Fecha de Nacimiento *</label>
+           <input type="text" class="form-control" id="datepicker" name="fecha_nacimiento" placeholder="Selecciona aquí" required>
+       </div>
 
-    <div>
-        <div class="container">
-            <p style="text-align: center;">2024 © Todos los derechos reservados. Diseñado por  J.A, A.Y, C.R, M.A y A.V</a></p>
-        </div>
-    </div>
+       <!-- Selector de Género -->
+       <div class="col-md-4 mb-3">
+           <label for="inputGenero" class="form-label">Género *</label>
+           <select id="inputGenero" class="form-select" name="genero" required>
+               <option value="" disabled selected>Seleccione</option>
+               <option value="M">Masculino</option>
+               <option value="F">Femenino</option>
+               <option value="O">Otro</option>
+           </select>
+       </div>
+
+       <!-- Campo de Nacionalidad -->
+       <div class="col-md-4 mb-3">
+           <label for="inputNacionalidad" class="form-label">Nacionalidad *</label>
+           <select id="inputNacionalidad" class="form-select" name="nacionalidad" required>
+               <option value="" disabled selected>Seleccione</option>
+               <option value="Afganistán">Afganistán</option>
+               <!-- Add more options here as necessary -->
+               <option value="Venezuela">Venezuela</option>
+           </select>
+       </div>
+
+       <!-- Campo de Dirección -->
+       <div class="col-12 mb-3">
+           <label for="inputDireccion" class="form-label">Dirección *</label>
+           <input type="text" class="form-control" id="inputDireccion" name="direccion" placeholder="Paseo de la Castellana, 3" required>
+       </div>
+
+       <!-- Campo de Dirección 2 -->
+       <div class="col-12 mb-3">
+           <label for="inputDireccion2" class="form-label">Dirección 2</label>
+           <input type="text" class="form-control" id="inputDireccion2" name="direccion2" placeholder="Apartamento, escalera, portal, puerta (Opcional)">
+       </div>
+
+       <!-- Campo de Ciudad -->
+       <div class="col-md-6 mb-3">
+           <label for="inputCiudad" class="form-label">Ciudad *</label>
+           <input type="text" class="form-control" id="inputCiudad" name="ciudad" required>
+       </div>
+
+       <!-- Campo de Código Postal -->
+       <div class="col-md-2 mb-3">
+           <label for="inputZip" class="form-label">Código Postal *</label>
+           <input type="text" class="form-control" id="inputZip" name="codigo_postal" required>
+       </div>
+
+       <!-- Campo de Teléfono -->
+       <div class="col-md-2 mb-3">
+           <label for="inputTelefono" class="form-label">Teléfono *</label>
+           <input type="text" class="form-control" id="inputTelefono" name="telefono" required>
+       </div>
+
+       <!-- Campo de Email -->
+       <div class="col-md-6 mb-3">
+           <label for="inputEmail4" class="form-label">Email *</label>
+           <input type="email" class="form-control" id="inputEmail4" name="correo_electronico" required>
+       </div>
+
+       <!-- Campo de Contraseña -->
+       <div class="col-md-6 mb-3">
+           <label for="inputPassword4" class="form-label">Contraseña *</label>
+           <input type="password" class="form-control" id="inputPassword4" name="contrasena" required>
+       </div>
+
+       <!-- Campo de Confirmar Contraseña -->
+       <div class="col-md-6 mb-3">
+           <label for="inputConfirmPassword4" class="form-label">Confirmar Contraseña *</label>
+           <input type="password" class="form-control" id="inputConfirmPassword4" name="confirmar_contrasena" required>
+       </div>
+
+       <!-- Campo de Historial Médico -->
+       <div class="col-12 mb-3">
+           <label for="inputHistorial" class="form-label">Historial Médico (Opcional)</label>
+           <textarea class="form-control" id="inputHistorial" name="historial_medico" rows="3"></textarea>
+       </div>
+
+       <!-- Campo de Información de Seguro -->
+       <div class="col-12 mb-3">
+           <label for="inputSeguro" class="form-label">Información del Seguro (Opcional)</label>
+           <textarea class="form-control" id="inputSeguro" name="informacion_seguro" rows="2"></textarea>
+       </div>
+
+       <!-- CheckBox -->
+       <div class="col-12 mb-3">
+           <div class="form-check">
+               <input class="form-check-input" type="checkbox" id="gridCheck" required>
+               <label class="form-check-label" for="gridCheck">
+                   Acepto los términos y condiciones
+               </label>
+           </div>
+       </div>
+
+       <!-- Botón de Enviar -->
+       <div class="col-12 mb-5">
+           <button type="submit" class="btn btn-primary">Registrar</button>
+       </div>
+   </form>
+
+   <div>
+       <div class="container">
+           <p style="text-align: center;">2024 © Todos los derechos reservados. Diseñado por  J.A, A.Y, C.R, M.A y A.V</p>
+       </div>
+   </div>
 
    <!-- JavaScript Files -->
-   <script src="{% static 'js/popper.min.js' %}"></script>
    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
    <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
    <script src="{% static 'js/plugin.js' %}"></script>
    <script src="{% static 'js/jquery.mCustomScrollbar.concat.min.js' %}"></script>
    <script src="{% static 'js/custom.js' %}"></script>
    <script src="{% static 'js/owl.carousel.js' %}"></script>
-   <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js"></script>
-   <script src="https://cdn.jsdelivr.net/npm/@coreui/coreui@4.0.0/dist/js/coreui.bundle.min.js"></script>
+   <script src="{% static 'js/jquery.fancybox.min.js' %}"></script>
 
    <!-- Initialize Datepicker -->
    <script>

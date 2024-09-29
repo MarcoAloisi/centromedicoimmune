@@ -1,40 +1,38 @@
-<!-- centroimmune/templates/solicitar_cita.html -->
-
+{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <title>Solicitar Nueva Cita</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
 </head>
 <body>
     <div class="container my-5">
         <h2>Solicitar Nueva Cita</h2>
         <form method="post">
             {% csrf_token %}
-            <div class="form-group">
+            <div class="mb-3">
                 {{ form.fecha.label_tag }}
                 {{ form.fecha }}
                 {% if form.fecha.errors %}
                     <div class="text-danger">{{ form.fecha.errors }}</div>
                 {% endif %}
             </div>
-            <div class="form-group">
+            <div class="mb-3">
                 {{ form.tratamiento.label_tag }}
                 {{ form.tratamiento }}
                 {% if form.tratamiento.errors %}
                     <div class="text-danger">{{ form.tratamiento.errors }}</div>
                 {% endif %}
             </div>
-            <div class="form-group">
+            <div class="mb-3">
                 {{ form.personal_medico.label_tag }}
                 {{ form.personal_medico }}
                 {% if form.personal_medico.errors %}
                     <div class="text-danger">{{ form.personal_medico.errors }}</div>
                 {% endif %}
             </div>
-            <div class="form-group">
+            <div class="mb-3">
                 {{ form.motivo.label_tag }}
                 {{ form.motivo }}
                 {% if form.motivo.errors %}
@@ -46,9 +44,7 @@
         </form>
     </div>
 
-    <!-- Bootstrap JS and dependencies -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Load Bootstrap 5 Bundle (includes Popper.js) -->
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
 </body>
 </html>

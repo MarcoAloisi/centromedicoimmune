@@ -1,4 +1,3 @@
-<!-- templates/inicio_sesion.html -->
 {% load static %}
 <!DOCTYPE html>
 <html lang="es">
@@ -6,17 +5,11 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
-
-    <link rel="icon" href="../static/images/logo_inmune.png" type="image/x-icon">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <link rel="icon" href="{% static 'images/logo_inmune.png' %}" type="image/x-icon">
     <title>Área Clientes - INMUNE</title>
-    <meta name="keywords" content="">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
+    
     <!-- CSS Files -->
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/inicio_sesion.css' %}">
@@ -25,43 +18,51 @@
     <link rel="stylesheet" href="{% static 'css/jquery.mCustomScrollbar.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/owl.theme.default.min.css' %}">
-    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.css" media="screen">
+    <link rel="stylesheet" href="{% static 'css/fontawesome.css' %}">
+    <link rel="stylesheet" href="{% static 'css/jquery.fancybox.min.css' %}" media="screen">
 </head>
 
-<body>
-    <div class="top-page row g-3">
-        <img src="{% static 'images/logo_inmune.png' %}" width="10%" />
-        <h1 style="margin-left: 10%;">Inicio de sesión</h1>
+<body class="d-flex flex-column min-vh-100">
+
+    <div class="top-page row g-3 align-items-center justify-content-center mb-4">
+        <div class="col-auto">
+            <img src="{% static 'images/logo_inmune.png' %}" width="100" alt="Logo Inmune"/>
+        </div>
+        <div class="col-auto">
+            <h1>Inicio de sesión</h1>
+        </div>
     </div>
 
     {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-        {% endfor %}
+        <div class="container">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        </div>
     {% endif %}
 
-    <form class="col" method="post" style="text-align: -webkit-center;">
+    <!-- Update form classes for vertical alignment -->
+    <form class="d-flex flex-column align-items-center" method="post" style="text-align: center;">
         {% csrf_token %}
         <!-- Campo de Email -->
-        <div class="col-md-3" style="margin-top: 4%;margin-bottom: 2%;">
+        <div class="col-md-4 mb-3">
             <label for="inputEmail4" class="form-label">Correo electrónico *</label>
             <input type="email" class="form-control" id="inputEmail4" name="correo_electronico" required>
         </div>
 
-        <!-- Campo de Contraseña -->
-        <div class="col-md-3" style="margin-bottom: 2%;">
+        <!-- Campo de Contraseña (placed below email) -->
+        <div class="col-md-4 mb-3">
             <label for="inputPassword4" class="form-label">Contraseña *</label>
             <input type="password" class="form-control" id="inputPassword4" name="contrasena" required>
         </div>
 
         <!-- Botón de Enviar -->
-        <div class="col-12" style="margin-bottom: 10%;">
+        <div class="col-12 mb-4">
             <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
         </div>
 
         <!-- Frase para registro -->
-        <div class="col-12 text-center">
+        <div class="col-12 text-center mb-4">
             <p>¿Aún no tienes cuenta? <a href="{% url 'registro' %}">Regístrate aquí</a></p>
         </div>
     </form>
@@ -93,22 +94,21 @@
         </div>
     </div>
 
-    <div>
+    <!-- Footer -->
+    <footer class="mt-auto py-3 bg-light text-center">
         <div class="container">
-            <p style="text-align: center;">2024 © Todos los derechos reservados. Diseñado por  J.A, A.Y, C.R, M.A y A.V</a></p>
+            <p class="mb-0">2024 © Todos los derechos reservados. Diseñado por J.A, A.Y, C.R, M.A y A.V</p>
         </div>
-    </div>
+    </footer>
 
     <!-- JavaScript Files -->
     <script src="{% static 'js/jquery-3.7.1.min.js' %}"></script>
-    <script src="{% static 'js/popper.min.js' %}"></script>
     <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static 'js/plugin.js' %}"></script>
     <script src="{% static 'js/jquery.mCustomScrollbar.concat.min.js' %}"></script>
     <script src="{% static 'js/custom.js' %}"></script>
     <script src="{% static 'js/owl.carousel.js' %}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.5/jquery.fancybox.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@coreui/coreui@4.0.0/dist/js/coreui.bundle.min.js"></script>
+    <script src="{% static 'js/jquery.fancybox.min.js' %}"></script>
 
     <!-- Inicializar el Modal si show_2fa es True -->
     <script>

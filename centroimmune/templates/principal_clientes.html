@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="{% static 'images/logo_inmune.png' %}" type="image/x-icon">
     <title>Portal de Usuario</title>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
 </head>
 <body>
     <!-- Navbar -->
@@ -18,6 +18,9 @@
         <div>
             <h3>Portal de Usuario</h3>
         </div>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
            <ul class="navbar-nav mr-auto">
               <li class="nav-item">
@@ -33,9 +36,7 @@
             {% for message in messages %}
                 <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
                     {{ message }}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Cerrar">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
                 </div>
             {% endfor %}
         {% endif %}
@@ -61,8 +62,8 @@
                     <p class="card-text"><strong>Teléfono: </strong>{{ paciente.telefono }}</p>
                     <p class="card-text"><strong>Correo Electrónico: </strong>{{ paciente.correo_electronico }}</p>
                 </div>
-                <div class="card-footer text-right">
-                    <a href="#" class="btn btn-info" data-toggle="modal" data-target="#modificarDatosModal">Modificar Datos</a>
+                <div class="card-footer d-flex justify-content-end">
+                    <a href="#" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modificarDatosModal">Modificar Datos</a>
                 </div>
             </div>
 
@@ -74,22 +75,19 @@
                             {% csrf_token %}
                             <div class="modal-header">
                                 <h5 class="modal-title" id="modificarDatosLabel">Modificar Datos Personales</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                             </div>
                             <div class="modal-body">
                                 {{ form_modificar_datos.as_p }}
                             </div>
                             <div class="modal-footer">
                                 <button type="submit" name="modificar_datos" class="btn btn-primary">Guardar Cambios</button>
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
-
 
             <!-- Tarjeta de Próximas Citas -->
             <div class="card mb-4 shadow-sm">
@@ -135,7 +133,7 @@
                                         </div>
                                         <div class="card-footer">
                                             <!-- Enlace para modificar la cita -->
-                                            <a href="#" class="btn btn-primary btn-block" data-toggle="modal" data-target="#modificarCitaModal{{ cita.id }}">Modificar cita</a>
+                                            <a href="#" class="btn btn-primary btn-block" data-bs-toggle="modal" data-bs-target="#modificarCitaModal{{ cita.id }}">Modificar cita</a>
                                         </div>
                                     </div>
                                 </div>
@@ -148,9 +146,7 @@
                                                 {% csrf_token %}
                                                 <div class="modal-header">
                                                     <h5 class="modal-title" id="modificarCitaLabel{{ cita.id }}">Modificar Cita</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                                                 </div>
                                                 <div class="modal-body">
                                                     {{ form_modificar.as_p }}
@@ -158,7 +154,7 @@
                                                 <div class="modal-footer">
                                                     <a href="{% url 'cancelar_cita' cita.id %}" class="btn btn-danger">Cancelar Cita</a>
                                                     <button type="submit" class="btn btn-primary">Guardar Cambios</button>
-                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                                                 </div>                                                
                                             </form>
                                         </div>
@@ -170,9 +166,9 @@
                         <p class="text-center">No tienes ninguna cita pendiente</p>
                     {% endif %}
                 </div>
-                <div class="card-footer text-right">
+                <div class="card-footer d-flex justify-content-end">
                     <!-- Botón para abrir el modal de Nueva Cita -->
-                    <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#nuevaCitaModal">Solicitar Nueva Cita</a>
+                    <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#nuevaCitaModal">Solicitar Nueva Cita</a>
                 </div>
             </div>
 
@@ -184,16 +180,14 @@
                             {% csrf_token %}
                             <div class="modal-header">
                                 <h5 class="modal-title" id="nuevaCitaLabel">Solicitar Nueva Cita</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                             </div>
                             <div class="modal-body">
                                 {{ form_nueva_cita.as_p }}
                             </div>
                             <div class="modal-footer">
                                 <button type="submit" class="btn btn-primary">Solicitar Cita</button>
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                             </div>
                         </form>
                     </div>
@@ -245,7 +239,7 @@
                                             <p class="card-text"><strong>Motivo cita: </strong>{{ cita.motivo }}</p>
                                             {% if not cita.tratamiento %}
                                                 <!-- Mostrar botón para asignar tratamiento -->
-                                                <button type="button" class="btn btn-success btn-block" data-toggle="modal" data-target="#asignarTratamientoModal{{ cita.id }}">Asignar Tratamiento</button>
+                                                <button type="button" class="btn btn-success btn-block" data-bs-toggle="modal" data-bs-target="#asignarTratamientoModal{{ cita.id }}">Asignar Tratamiento</button>
                                             {% endif %}
                                         </div>
                                     </div>
@@ -259,16 +253,14 @@
                                                 {% csrf_token %}
                                                 <div class="modal-header">
                                                     <h5 class="modal-title" id="asignarTratamientoLabel{{ cita.id }}">Asignar Tratamiento</h5>
-                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                                                 </div>
                                                 <div class="modal-body">
                                                     {{ form_asignar_tratamiento.as_p }}
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="submit" class="btn btn-primary">Guardar</button>
-                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                                                 </div>
                                             </form>
                                         </div>
@@ -287,13 +279,11 @@
 
     <div>
         <div class="container">
-            <p style="text-align: center;">2024 © Todos los derechos reservados. Diseñado por  J.A, A.Y, C.R, M.A y A.V</a></p>
+            <p style="text-align: center;">2024 © Todos los derechos reservados. Diseñado por  J.A, A.Y, C.R, M.A y A.V</p>
         </div>
     </div>
     
-    <!-- Bootstrap JS y dependencias -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Load Bootstrap 5 Dependencies -->
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
 </body>
 </html>

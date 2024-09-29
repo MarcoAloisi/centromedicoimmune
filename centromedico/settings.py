@@ -45,10 +45,12 @@ INSTALLED_APPS = [
     'django_extensions',
     'centroimmune',
     'corsheaders',
+    'csp',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'csp.middleware.CSPMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',  # Serve static files efficiently
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -147,6 +149,27 @@ else:
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CRYPTOGRAPHY_KEY = config('CRYPTOGRAPHY_KEY')
+
+# Content Security Policy (CSP)
+CSP_DEFAULT_SRC = ("'self'",)  # Allow everything from the same origin
+
+# Allow inline styles and Google Fonts
+CSP_STYLE_SRC = ("'self'", "'unsafe-inline'", "https://fonts.googleapis.com")
+
+# Allow inline scripts and external trusted scripts
+CSP_SCRIPT_SRC = ("'self'", "'unsafe-inline'", "https://cdnjs.cloudflare.com", "https://cdn.jsdelivr.net")  # Allow external CDNs for libraries like Bootstrap and Popper
+
+# Allow images from self and inline base64 images
+CSP_IMG_SRC = ("'self'", "data:")
+
+# Allow fonts from self and Google Fonts
+CSP_FONT_SRC = ("'self'", "https://fonts.gstatic.com", "data:")
+
+# Allow AJAX and other connections from the same origin
+CSP_CONNECT_SRC = ("'self'",)
+
+
+
 
 # Security settings
 SESSION_COOKIE_SECURE = True  # Ensures cookies are only sent over HTTPS
