@@ -1,4 +1,5 @@
 {% load static %}
+{% load csp %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -45,6 +46,6 @@
     </div>
 
     <!-- Load Bootstrap 5 Bundle (includes Popper.js) -->
-    <script src="{% static 'js/bootstrap.bundle.min.js' %}" nonce="{{ request.nonce }}"></script>
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}" nonce="{{ csp_nonce }}"></script>
 </body>
 </html>

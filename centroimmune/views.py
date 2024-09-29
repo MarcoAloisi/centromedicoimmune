@@ -171,7 +171,7 @@ def inicio_sesion(request):
                 # Limpiar el token y la sesión de pre-2FA
                 cache.delete(f'2fa_token_{user.pk}')
                 cache.delete(two_fa_key)
-                del request.session['pre_2fa_user_id']
+                request.session.pop('pre_2fa_user_id', None)
 
                 # Guardar tiempo de la verificación exitosa
                 request.session['2fa_verified'] = True
@@ -183,9 +183,10 @@ def inicio_sesion(request):
                 two_fa_attempts += 1
                 cache.set(two_fa_key, two_fa_attempts, timeout=600)
                 messages.error(request, 'Código de verificación inválido o expirado.')
+                return render(request, 'inicio_sesion.html', {'show_2fa': True})
 
         else:
-            # Etapa 1: Autenticación inicial
+            # Etapa 1: Autenticación inicial (correo y contraseña)
             correo_electronico = request.POST.get('correo_electronico')
             contrasena = request.POST.get('contrasena')
 
@@ -196,7 +197,7 @@ def inicio_sesion(request):
 
             if attempts >= max_attempts:
                 messages.error(request, 'Cuenta bloqueada temporalmente debido a múltiples intentos fallidos. Intenta de nuevo más tarde.')
-                return render(request, 'inicio_sesion.html')
+                return render(request, 'inicio_sesion.html', {'show_2fa': False})
 
             # Autenticar al usuario
             user = authenticate(request, username=correo_electronico, password=contrasena)
@@ -223,6 +224,7 @@ def inicio_sesion(request):
 
                 # Generar un token de 2FA
                 token = str(secrets.randbelow(1000000)).zfill(6)  # Código de 6 dígitos con ceros a la izquierda
+                print(f"User role: {user}")
 
                 # Almacenar el token en caché con un tiempo de expiración (por ejemplo, 10 minutos)
                 cache.set(f'2fa_token_{user.pk}', token, timeout=600)
@@ -232,23 +234,31 @@ def inicio_sesion(request):
                     html_content = render_to_string('emails/2fa_email.html', {'token': token})
                     text_content = f'Tu código de verificación de dos factores es: {token}\n\nSi no solicitaste este código, ignora este correo electrónico.'
                     
+
+                    # Log the email sending process for debugging
+                    print(f"Sending 2FA token to: {user.correo_electronico}")
+
                     msg = EmailMultiAlternatives(
                         subject='Código de Verificación de 2FA',
                         body=text_content,
                         from_email=settings.DEFAULT_FROM_EMAIL,
-                        to=[user.email]
+                        to=[user.correo_electronico]
                     )
                     msg.attach_alternative(html_content, "text/html")
                     msg.send()
+
+                    print("Email sent successfully!")
+
                 except Exception as e:
                     messages.error(request, 'Error al enviar el correo electrónico. Intenta de nuevo.')
-                    return render(request, 'inicio_sesion.html')
+                    return render(request, 'inicio_sesion.html', {'show_2fa': False})
 
                 # Almacenar el ID del usuario en la sesión para el proceso de 2FA
                 request.session['pre_2fa_user_id'] = user.pk
 
                 # Indicar que el token ha sido enviado para activar el modal
                 messages.info(request, 'Se ha enviado un código de verificación a tu correo electrónico.')
+                return render(request, 'inicio_sesion.html', {'show_2fa': True})
             else:
                 # Incrementar el contador de intentos fallidos
                 attempts += 1
@@ -257,11 +267,11 @@ def inicio_sesion(request):
                     messages.error(request, 'Cuenta bloqueada temporalmente debido a múltiples intentos fallidos. Intenta de nuevo más tarde.')
                 else:
                     messages.error(request, 'Correo electrónico o contraseña incorrectos.')
+                # Always return the login page without showing the 2FA modal if the credentials are wrong
+                return render(request, 'inicio_sesion.html', {'show_2fa': False})
 
-    # Determinar si mostrar el modal de 2FA
-    show_2fa = False
-    if 'pre_2fa_user_id' in request.session:
-        show_2fa = True
+    # Solo mostrar el modal si el usuario ya pasó la autenticación inicial y se encuentra en la etapa de 2FA
+    show_2fa = request.method == 'POST' and 'pre_2fa_user_id' in request.session
 
     return render(request, 'inicio_sesion.html', {'show_2fa': show_2fa})
 

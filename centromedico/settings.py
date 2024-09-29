@@ -60,7 +60,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'corsheaders.middleware.CorsMiddleware',
-    'centroimmune.middlewares.CSPNonceMiddleware',
 ]
 
 ROOT_URLCONF = 'centromedico.urls'
@@ -150,15 +149,30 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CRYPTOGRAPHY_KEY = config('CRYPTOGRAPHY_KEY')
 
 
-# Content Security Policy (CSP)
-CSP_DEFAULT_SRC = ("'self'",)  # Only allow resources from the same origin
-CSP_SCRIPT_SRC = ("'self'", "https://cdnjs.cloudflare.com", "https://cdn.jsdelivr.net", "https://leostop.com","'strict-dynamic'")
-CSP_STYLE_SRC = ("'self'", "https://fonts.googleapis.com", "'unsafe-inline'")
+# Content Security Policy (CSP) using django-csp
+CSP_DEFAULT_SRC = ("'self'",)
+CSP_SCRIPT_SRC = (
+    "'self'",
+    "https://cdnjs.cloudflare.com",
+    "https://cdn.jsdelivr.net",
+    "https://leostop.com",
+)
+CSP_STYLE_SRC = (
+    "'self'",
+    "https://fonts.googleapis.com",
+)
 CSP_OBJECT_SRC = ("'none'",)
 CSP_BASE_URI = ("'self'",)
 CSP_FONT_SRC = ("'self'", "https://fonts.gstatic.com", "data:")
 CSP_IMG_SRC = ("'self'", "data:")
 CSP_CONNECT_SRC = ("'self'",)
+CSP_FRAME_SRC = ("'none'",)
+CSP_FORM_ACTION = ("'self'",)
+CSP_FRAME_ANCESTORS = ("'self'",)
+
+# Enable nonce for scripts and styles
+CSP_INCLUDE_NONCE_IN = ('script-src', 'style-src')
+
 
 # Security settings
 SESSION_COOKIE_SECURE = True
@@ -197,9 +211,13 @@ X_FRAME_OPTIONS = 'DENY'
 SECURE_BROWSER_XSS_FILTER = True
 
 #Esto es solo en entorno de preproducción
-CORS_ALLOW_ALL_ORIGINS = True
+# CORS_ALLOW_ALL_ORIGINS = True
 
 #Aquí hay que meter las URL de las API que usemos
 CORS_ALLOWED_ORIGINS = [
-
+    "https://centromedicoimmune.onrender.com",
+    "http://localhost:3000",
+    "http://localhost:8000",
+    "http://render.com",
+    "https://render.com",
 ]

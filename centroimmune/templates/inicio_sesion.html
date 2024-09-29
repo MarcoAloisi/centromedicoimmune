@@ -1,4 +1,5 @@
 {% load static %}
+{% load csp %}
 <!DOCTYPE html>
 <html lang="es">
 
@@ -19,6 +20,7 @@
     <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/owl.theme.default.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/fontawesome.css' %}">
+    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/jquery.fancybox.min.css' %}" media="screen">
 </head>
 
@@ -42,7 +44,7 @@
     {% endif %}
 
     <!-- Update form classes for vertical alignment -->
-    <form class="d-flex flex-column align-items-center" method="post" style="text-align: center;">
+    <form class="d-flex flex-column align-items-center text-center-form" method="post">
         {% csrf_token %}
         <!-- Campo de Email -->
         <div class="col-md-4 mb-3">
@@ -102,17 +104,17 @@
     </footer>
 
     <!-- JavaScript Files -->
-    <script src="{% static 'js/jquery-3.7.1.min.js' %}" nonce="{{ request.nonce }}"></script>
-    <script src="{% static 'js/bootstrap.bundle.min.js' %}" nonce="{{ request.nonce }}"></script>
-    <script src="{% static 'js/plugin.js' %}" nonce="{{ request.nonce }}"></script>
-    <script src="{% static 'js/jquery.mCustomScrollbar.concat.min.js' %}" nonce="{{ request.nonce }}"></script>
-    <script src="{% static 'js/custom.js' %}" nonce="{{ request.nonce }}"></script>
-    <script src="{% static 'js/owl.carousel.js' %}" nonce="{{ request.nonce }}"></script>
-    <script src="{% static 'js/jquery.fancybox.min.js' %}" nonce="{{ request.nonce }}"></script>
+    <script src="{% static 'js/jquery-3.7.1.min.js' %}" nonce="{{ csp_nonce }}"></script>
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}" nonce="{{ csp_nonce }}"></script>
+    <script src="{% static 'js/plugin.js' %}" nonce="{{ csp_nonce }}"></script>
+    <script src="{% static 'js/jquery.mCustomScrollbar.concat.min.js' %}" nonce="{{ csp_nonce }}"></script>
+    <script src="{% static 'js/custom.js' %}" nonce="{{ csp_nonce }}"></script>
+    <script src="{% static 'js/owl.carousel.js' %}" nonce="{{ csp_nonce }}"></script>
+    <script src="{% static 'js/jquery.fancybox.min.js' %}" nonce="{{ csp_nonce }}"></script>
 
     <body class="d-flex flex-column min-vh-100" data-show2fa="{{ show_2fa|yesno:'true,false' }}">
         ...
-        <script src="{% static 'js/twoFactorModal.js' %}" nonce="{{ request.nonce }}"></script>
+        <script src="{% static 'js/twoFactorModal.js' %}" nonce="{{ csp_nonce }}"></script>
     </body>
 
 </body>
