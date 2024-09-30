@@ -149,14 +149,96 @@
            </div>
 
            <!-- Checkbox -->
-           <div class="col-12">
-               <div class="form-check">
-                   <input class="form-check-input" type="checkbox" id="gridCheck" required>
-                   <label class="form-check-label" for="gridCheck">
-                        <a href="{% url 'terminos' %}" target="_blank">Acepto los términos y condiciones</a>
-                </label>
-               </div>
-           </div>
+            <!-- Checkbox -->
+            <div class="col-12">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="gridCheck" required>
+                    <label class="form-check-label" for="gridCheck">
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#terminosModal">Acepto los términos y condiciones</a>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Modal de Términos y Condiciones -->
+            <div class="modal fade" id="terminosModal" tabindex="-1" aria-labelledby="terminosModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="terminosModalLabel">Términos y Condiciones</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <h1 class="text-center mb-4">Términos y Condiciones de Registro y Uso del Sitio Web de INMUNE</h1>
+                            <p class="text-muted text-center">Última actualización: 30/09/2024</p>
+
+                            <div class="card mb-4">
+                                <div class="card-body">
+                                    <h2 class="card-title">1. Información General</h2>
+                                    <p>Al registrarte en el sitio web del centro médico INMUNE, ubicado en España, confirmas que has leído, entendido y aceptas estos términos y condiciones, así como nuestra política de privacidad. Estos términos y condiciones están sujetos a la legislación vigente en España, incluyendo el Reglamento General de Protección de Datos (RGPD) (UE 2016/679) y la Ley Orgánica de Protección de Datos y Garantía de los Derechos Digitales (LOPDGDD) (Ley Orgánica 3/2018).</p>
+                                </div>
+                            </div>
+
+                            <div class="card mb-4">
+                                <div class="card-body">
+                                    <h2 class="card-title">2. Datos Recolectados</h2>
+                                    <p>Para poder completar tu registro en el sitio web de INMUNE, es necesario que nos proporciones los siguientes datos personales:</p>
+                                    <ul>
+                                        <li>Nombre y apellidos</li>
+                                        <li>DNI</li>
+                                        <li>Fecha de nacimiento</li>
+                                        <li>Género</li>
+                                        <li>Nacionalidad</li>
+                                        <li>Dirección</li>
+                                        <li>Ciudad</li>
+                                        <li>Código postal</li>
+                                        <li>Teléfono</li>
+                                        <li>Correo electrónico</li>
+                                        <li>Contraseña para la cuenta</li>
+                                        <li>De manera opcional: historial médico e información de seguro médico</li>
+                                    </ul>
+                                    <p>Todos los datos serán tratados conforme a la normativa de protección de datos vigente en España y la Unión Europea.</p>
+                                </div>
+                            </div>
+
+                            <div class="card mb-4">
+                                <div class="card-body">
+                                    <h2 class="card-title">3. Finalidad del Tratamiento de Datos</h2>
+                                    <p>Los datos que nos proporciones serán utilizados para los siguientes fines:</p>
+                                    <ul>
+                                        <li>Gestión de la relación médico-paciente.</li>
+                                        <li>Proporcionar servicios médicos y asesoramiento personalizado.</li>
+                                        <li>Facilitar el acceso y uso de la plataforma web.</li>
+                                        <li>Cumplir con las obligaciones legales y regulatorias aplicables.</li>
+                                        <li>Opcionalmente, para el tratamiento médico y gestión del historial clínico, con consentimiento expreso.</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="card mb-4">
+                                <div class="card-body">
+                                    <h2 class="card-title">4. Derechos del Usuario</h2>
+                                    <p>Como usuario registrado, tienes los siguientes derechos sobre tus datos personales:</p>
+                                    <ul>
+                                        <li><strong>Derecho de acceso:</strong> Puedes solicitar información sobre los datos que almacenamos sobre ti.</li>
+                                        <li><strong>Derecho de rectificación:</strong> Puedes corregir cualquier dato personal incorrecto.</li>
+                                        <li><strong>Derecho de supresión ("derecho al olvido"):</strong> Puedes solicitar la eliminación de tus datos en ciertos casos.</li>
+                                        <li><strong>Derecho a la limitación del tratamiento:</strong> Puedes solicitar la limitación del tratamiento de tus datos en determinadas situaciones.</li>
+                                        <li><strong>Derecho a la portabilidad de los datos:</strong> Puedes solicitar que tus datos sean transferidos a otra entidad en un formato estructurado, de uso común y lectura mecánica.</li>
+                                        <li><strong>Derecho de oposición:</strong> Puedes oponerte al tratamiento de tus datos para fines específicos, como el marketing.</li>
+                                    </ul>
+                                    <p>Para ejercer cualquiera de estos derechos, puedes ponerte en contacto con nosotros a través de [dirección de correo electrónico o formulario de contacto].</p>
+                                </div>
+                            </div>
+
+                            <!-- Continúa con el resto de los términos y condiciones -->
+                            
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
            <!-- Botón de Enviar -->
            <div class="col-12">
