@@ -28,6 +28,9 @@ from datetime import timedelta
 import os
 import base64
 
+def terminos(request):
+    return render(request, 'terminos.html')
+
 def registro(request):
     if request.method == 'POST':
         # Obtener datos del formulario
